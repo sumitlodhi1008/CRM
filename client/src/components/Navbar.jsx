@@ -27,7 +27,7 @@ const Navbar = () => {
             <i className="bi bi-intersect"></i>
           </div>
           <div>
-            <span className="fw-bold fs-5 tracking-tight">Acxiom<span style={{ color: '#60A5FA' }}>CRM</span></span>
+            <span className="fw-bold fs-5 tracking-tight">Acxiom<span style={{ color: '#818CF8', fontWeight: 800 }}>CRM</span></span>
           </div>
         </Link>
 
@@ -36,7 +36,7 @@ const Navbar = () => {
           {user && (
             <>
               <div className="user-profile-pill d-none d-sm-flex">
-                <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{ width: '28px', height: '28px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                <div className="rounded-circle text-white d-flex align-items-center justify-content-center" style={{ width: '28px', height: '28px', fontSize: '0.8rem', fontWeight: 'bold', backgroundColor: '#4F46E5' }}>
                   {user.name.charAt(0)}
                 </div>
                 <div className="d-flex flex-column text-start">

@@ -44,10 +44,10 @@ const Login = () => {
     <div className="d-flex align-items-center justify-content-center min-vh-100" style={{ backgroundColor: '#F8FAFC' }}>
       <div className="crm-card p-4 p-sm-5" style={{ maxWidth: '440px', width: '100%', boxShadow: '0 20px 25px -5px rgba(15, 23, 42, 0.08)' }}>
         <div className="text-center mb-4">
-          <div className="d-inline-flex align-items-center justify-content-center bg-primary text-white p-3 rounded-3 mb-3 shadow-sm" style={{ width: '52px', height: '52px' }}>
+          <div className="d-inline-flex align-items-center justify-content-center text-white p-3 rounded-3 mb-3" style={{ width: '52px', height: '52px', background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)', boxShadow: '0 4px 12px rgba(79, 70, 229, 0.35)' }}>
             <i className="bi bi-intersect fs-3"></i>
           </div>
-          <h3 className="fw-bold text-dark mb-1">Acxiom<span style={{ color: '#2563EB' }}>CRM</span></h3>
+          <h3 className="fw-bold text-dark mb-1">Acxiom<span style={{ color: '#4F46E5', fontWeight: 800 }}>CRM</span></h3>
           <p className="text-muted small">Enterprise Customer Relationship & Sales Management</p>
         </div>
 

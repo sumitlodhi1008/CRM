@@ -100,13 +100,14 @@ body {
 .crm-brand-icon {
   width: 34px;
   height: 34px;
-  background: var(--crm-primary);
+  background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
   color: #fff;
-  border-radius: 8px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
 }
 
 .user-profile-pill {

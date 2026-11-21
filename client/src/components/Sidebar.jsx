@@ -44,7 +44,7 @@ const Sidebar = () => {
           <nav className="nav flex-column">
             {isAdmin && (
               <NavLink to="/users" className={({ isActive }) => `crm-nav-link ${isActive ? 'active' : ''}`}>
-                <i className="bi bi-shield-person"></i>
+                <i className="bi bi-people-fill"></i>
                 <span>User Governance</span>
               </NavLink>
             )}
