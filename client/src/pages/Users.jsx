@@ -25,7 +25,7 @@ const Users = () => {
       const res = await api.get('/users');
       setUsers(res.data.data);
     } catch (err) {
-      console.error('Error fetching users:', err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -65,9 +65,9 @@ const Users = () => {
 
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (!formData.email.trim()) {
-      errors.email = 'Email address is required.';
+      errors.email = 'Email is required.';
     } else if (!emailRegex.test(formData.email.trim())) {
-      errors.email = 'Enter a valid email address.';
+      errors.email = 'Enter a valid email.';
     }
 
     if (!editingUser) {
@@ -75,7 +75,7 @@ const Users = () => {
       if (!formData.password) {
         errors.password = 'Password is required.';
       } else if (!passwordRegex.test(formData.password)) {
-        errors.password = 'Password must be at least 8 characters with 1 uppercase, 1 lowercase, 1 digit, and 1 special character.';
+        errors.password = 'Password must be min 8 chars with 1 uppercase, 1 lowercase, 1 number, and 1 symbol.';
       }
     }
 
@@ -96,15 +96,15 @@ const Users = () => {
           role: formData.role,
           isActive: formData.isActive
         });
-        Swal.fire('Success', 'User profile updated successfully.', 'success');
+        Swal.fire({ title: 'Updated', text: 'User profile updated.', icon: 'success', confirmButtonColor: '#2563EB' });
       } else {
         await api.post('/users', formData);
-        Swal.fire('Success', 'New user account provisioned successfully.', 'success');
+        Swal.fire({ title: 'Created', text: 'User account provisioned.', icon: 'success', confirmButtonColor: '#2563EB' });
       }
       setShowModal(false);
       fetchUsers();
     } catch (err) {
-      Swal.fire('Error', err.response?.data?.detail || 'Failed to save user.', 'error');
+      Swal.fire('Error', err.response?.data?.detail || 'Failed.', 'error');
     } finally {
       setSaving(false);
     }
@@ -113,55 +113,58 @@ const Users = () => {
   const handleUnlockAccount = async (id, name) => {
     try {
       await api.put(`/users/${id}`, { resetLockout: true });
-      Swal.fire('Unlocked', `Account for ${name} has been unlocked and failed attempts reset.`, 'success');
+      Swal.fire({ title: 'Unlocked', text: `Account for ${name} unlocked.`, icon: 'success', confirmButtonColor: '#2563EB' });
       fetchUsers();
     } catch (err) {
-      Swal.fire('Error', 'Failed to unlock account.', 'error');
+      Swal.fire('Error', 'Failed to unlock.', 'error');
     }
   };
 
   const handleToggleStatus = async (user) => {
     try {
       await api.put(`/users/${user._id}`, { isActive: !user.isActive });
-      Swal.fire('Updated', `User account marked as ${!user.isActive ? 'Active' : 'Deactivated'}.`, 'success');
+      Swal.fire('Updated', `Account status updated.`, 'success');
       fetchUsers();
     } catch (err) {
-      Swal.fire('Error', 'Failed to update user status.', 'error');
+      Swal.fire('Error', 'Failed to update status.', 'error');
     }
   };
 
   return (
     <div className="container-fluid p-4">
+      {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1">User & Access Management</h2>
-          <p className="text-muted small mb-0">Administer personnel accounts, assign RBAC roles, and manage account lockout security.</p>
+          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>User Governance</h2>
+          <p className="text-secondary small mb-0">Administer personnel roles, authentication lockout states, and system access.</p>
         </div>
-        <button className="btn btn-primary d-flex align-items-center" onClick={() => handleOpenModal()}>
-          <i className="bi bi-person-plus-fill me-2"></i> Provision New User
+        <button className="btn btn-primary d-flex align-items-center gap-2" onClick={() => handleOpenModal()}>
+          <i className="bi bi-person-plus-fill"></i>
+          <span>Provision User</span>
         </button>
       </div>
 
-      <div className="crm-table-card shadow-sm">
+      {/* Table */}
+      <div className="crm-table-container">
         <div className="table-responsive">
-          <table className="table crm-table table-hover mb-0">
+          <table className="crm-table">
             <thead>
               <tr>
-                <th>User Full Name</th>
+                <th>User</th>
                 <th>Email Address</th>
-                <th>Assigned Role</th>
-                <th>Account Status</th>
-                <th>Failed Logins</th>
-                <th>Lockout State</th>
+                <th>Primary Role</th>
+                <th>State</th>
+                <th>Failed Attempts</th>
+                <th>Security Lockout</th>
                 <th className="text-end">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-4">
-                    <div className="spinner-border spinner-border-sm text-primary me-2"></div>
-                    Loading users...
+                  <td colSpan="7" className="text-center py-4 text-secondary">
+                    <span className="spinner-border spinner-border-sm me-2 text-primary"></span>
+                    Fetching personnel...
                   </td>
                 </tr>
               ) : (
@@ -170,46 +173,46 @@ const Users = () => {
 
                   return (
                     <tr key={u._id}>
-                      <td className="fw-semibold">{u.name}</td>
-                      <td>{u.email}</td>
+                      <td className="fw-semibold text-dark">{u.name}</td>
+                      <td><small className="text-secondary">{u.email}</small></td>
                       <td>
-                        <span className={`badge ${u.role === 'Admin' ? 'bg-danger' : u.role === 'Manager' ? 'bg-primary' : 'bg-success'}`}>
+                        <span className={`badge-pill ${u.role === 'Admin' ? 'badge-danger-soft' : u.role === 'Manager' ? 'badge-primary-soft' : 'badge-secondary-soft'}`}>
                           {u.role}
                         </span>
                       </td>
                       <td>
-                        <span className={`badge ${u.isActive ? 'bg-success' : 'bg-secondary'}`}>
+                        <span className={`badge-pill ${u.isActive ? 'badge-success-soft' : 'badge-secondary-soft'}`}>
                           {u.isActive ? 'Active' : 'Deactivated'}
                         </span>
                       </td>
                       <td>
-                        <span className={`badge ${u.failedLoginCount >= 5 ? 'bg-danger' : u.failedLoginCount > 0 ? 'bg-warning text-dark' : 'bg-light text-dark border'}`}>
+                        <span className={`badge-pill ${u.failedLoginCount >= 5 ? 'badge-danger-soft' : 'badge-secondary-soft'}`}>
                           {u.failedLoginCount || 0} / 5
                         </span>
                       </td>
                       <td>
                         {isLocked ? (
                           <div className="d-flex align-items-center gap-2">
-                            <span className="badge bg-danger badge-pulse">LOCKED</span>
+                            <span className="badge-pill badge-danger-soft fw-bold">LOCKED</span>
                             <button
-                              className="btn btn-sm btn-outline-warning py-0 px-1"
+                              className="btn btn-sm btn-outline-primary py-0 px-2"
+                              style={{ fontSize: '0.75rem' }}
                               onClick={() => handleUnlockAccount(u._id, u.name)}
-                              title="Unlock Account"
                             >
-                              <i className="bi bi-unlock-fill me-1"></i> Unlock
+                              Unlock
                             </button>
                           </div>
                         ) : (
-                          <span className="badge bg-light text-success border">Normal</span>
+                          <span className="badge-pill badge-success-soft">Normal</span>
                         )}
                       </td>
                       <td className="text-end">
                         <div className="btn-group btn-group-sm">
-                          <button className="btn btn-outline-primary" onClick={() => handleOpenModal(u)} title="Edit Role/User">
+                          <button className="btn btn-outline-secondary" onClick={() => handleOpenModal(u)} title="Edit">
                             <i className="bi bi-pencil"></i>
                           </button>
                           <button
-                            className={`btn ${u.isActive ? 'btn-outline-warning' : 'btn-outline-success'}`}
+                            className={`btn ${u.isActive ? 'btn-outline-secondary' : 'btn-outline-primary'}`}
                             onClick={() => handleToggleStatus(u)}
                             title={u.isActive ? 'Deactivate' : 'Activate'}
                           >
@@ -226,14 +229,14 @@ const Users = () => {
         </div>
       </div>
 
-      {/* User Modal */}
+      {/* Modal */}
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}>
           <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content border-0 shadow">
-              <div className="modal-header bg-light">
-                <h5 className="modal-title fw-bold">
-                  {editingUser ? `Edit User: ${editingUser.name}` : 'Provision New System User'}
+            <div className="modal-content border-0">
+              <div className="modal-header">
+                <h5 className="modal-title fw-bold" style={{ color: '#0F172A' }}>
+                  {editingUser ? `Edit User: ${editingUser.name}` : 'Provision User Account'}
                 </h5>
                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
@@ -269,14 +272,12 @@ const Users = () => {
                       <input
                         type="password"
                         className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
-                        placeholder="Min 8 chars, Aa1@"
+                        placeholder="Aa1@••••••••"
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       />
                       {formErrors.password && <div className="invalid-feedback">{formErrors.password}</div>}
-                      <small className="text-muted d-block mt-1">
-                        Must contain uppercase, lowercase, digit, and special symbol.
-                      </small>
+                      <small className="text-muted d-block mt-1">Min 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 symbol.</small>
                     </div>
                   )}
 
@@ -287,9 +288,9 @@ const Users = () => {
                       value={formData.role}
                       onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                     >
-                      <option value="SalesExecutive">Sales Executive (Field / Inside Sales)</option>
-                      <option value="Manager">Sales Manager (Team Management)</option>
-                      <option value="Admin">Administrator (Full Access)</option>
+                      <option value="SalesExecutive">Sales Executive</option>
+                      <option value="Manager">Sales Manager</option>
+                      <option value="Admin">Administrator</option>
                     </select>
                   </div>
 
@@ -297,19 +298,19 @@ const Users = () => {
                     <input
                       className="form-check-input"
                       type="checkbox"
-                      id="userActiveSwitch"
+                      id="activeCheck"
                       checked={formData.isActive}
                       onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                     />
-                    <label className="form-check-label fw-semibold" htmlFor="userActiveSwitch">
-                      Account Active
+                    <label className="form-check-label fw-semibold small" htmlFor="activeCheck">
+                      Account Enabled & Active
                     </label>
                   </div>
                 </div>
-                <div className="modal-footer bg-light">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-outline-secondary" onClick={() => setShowModal(false)}>Cancel</button>
                   <button type="submit" className="btn btn-primary" disabled={saving}>
-                    {saving ? 'Saving...' : editingUser ? 'Update User' : 'Provision User'}
+                    {saving ? 'Saving...' : editingUser ? 'Update User' : 'Save User'}
                   </button>
                 </div>
               </form>

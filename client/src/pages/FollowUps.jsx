@@ -34,7 +34,7 @@ const FollowUps = () => {
       const res = await api.get(url);
       setFollowUps(res.data.data);
     } catch (err) {
-      console.error('Error fetching follow-ups:', err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ const FollowUps = () => {
       setCustomers(cRes.data.data);
       setLeads(lRes.data.data);
     } catch (err) {
-      console.error('Error fetching customers/leads:', err);
+      console.error(err);
     }
   };
 
@@ -82,7 +82,6 @@ const FollowUps = () => {
       errors.subject = 'Follow-up Subject is required.';
     }
 
-    // Business validation rule: Anti-backdating
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const targetDate = new Date(formData.followUpDate);
@@ -110,12 +109,11 @@ const FollowUps = () => {
       };
 
       await api.post('/followups', payload);
-      Swal.fire('Scheduled', 'New follow-up activity scheduled successfully.', 'success');
+      Swal.fire({ title: 'Scheduled', text: 'Touchpoint reminder established.', icon: 'success', confirmButtonColor: '#2563EB' });
       setShowModal(false);
       fetchFollowUps();
     } catch (err) {
-      const msg = err.response?.data?.detail || 'Failed to schedule follow-up.';
-      Swal.fire('Validation Error', msg, 'error');
+      Swal.fire('Validation Error', err.response?.data?.detail || 'Failed to schedule.', 'error');
     } finally {
       setSaving(false);
     }
@@ -125,11 +123,11 @@ const FollowUps = () => {
     const { value: remarks } = await Swal.fire({
       title: 'Complete Follow-Up',
       input: 'textarea',
-      inputLabel: 'Completion Remarks / Outcome Notes',
-      inputPlaceholder: 'Enter summary of client interaction...',
+      inputLabel: 'Completion Remarks',
+      inputPlaceholder: 'Enter interaction outcome...',
       showCancelButton: true,
-      confirmButtonText: 'Mark Completed',
-      confirmButtonColor: '#10B981'
+      confirmButtonText: 'Mark Complete',
+      confirmButtonColor: '#2563EB'
     });
 
     if (remarks !== undefined) {
@@ -138,72 +136,72 @@ const FollowUps = () => {
           status: 'Completed',
           remarks: remarks || 'Completed successfully.'
         });
-        Swal.fire('Completed', 'Follow-up marked as Completed.', 'success');
+        Swal.fire('Complete', 'Follow-up marked as Completed.', 'success');
         fetchFollowUps();
       } catch (err) {
-        Swal.fire('Error', err.response?.data?.detail || 'Failed to update follow-up.', 'error');
+        Swal.fire('Error', err.response?.data?.detail || 'Failed.', 'error');
       }
     }
   };
 
   return (
     <div className="container-fluid p-4">
+      {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1">Follow-Up & Touchpoint Management</h2>
-          <p className="text-muted small mb-0">Schedule future communications, track overdue touchpoints, and log interaction history.</p>
+          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Follow-Up & Touchpoints</h2>
+          <p className="text-secondary small mb-0">Scheduled client communications, overdue alerts, and task tracking.</p>
         </div>
-        <button className="btn btn-primary d-flex align-items-center" onClick={handleOpenModal}>
-          <i className="bi bi-calendar-plus me-2"></i> Schedule Follow-Up
+        <button className="btn btn-primary d-flex align-items-center gap-2" onClick={handleOpenModal}>
+          <i className="bi bi-calendar-plus"></i>
+          <span>Schedule Follow-Up</span>
         </button>
       </div>
 
       {/* Filter Tabs */}
-      <div className="card border-0 shadow-sm p-3 mb-4" style={{ borderRadius: '10px' }}>
-        <div className="d-flex flex-wrap align-items-center gap-3">
-          <div className="btn-group" role="group">
-            <button
-              type="button"
-              className={`btn ${status === '' && !isOverdue ? 'btn-primary' : 'btn-outline-secondary'}`}
-              onClick={() => { setStatus(''); setIsOverdue(false); }}
-            >
-              All Follow-Ups
-            </button>
-            <button
-              type="button"
-              className={`btn ${status === 'Planned' && !isOverdue ? 'btn-primary' : 'btn-outline-secondary'}`}
-              onClick={() => { setStatus('Planned'); setIsOverdue(false); }}
-            >
-              Planned / Upcoming
-            </button>
-            <button
-              type="button"
-              className={`btn ${isOverdue ? 'btn-danger' : 'btn-outline-danger'}`}
-              onClick={() => { setStatus(''); setIsOverdue(true); }}
-            >
-              <i className="bi bi-exclamation-circle-fill me-1"></i> Overdue Activities
-            </button>
-            <button
-              type="button"
-              className={`btn ${status === 'Completed' ? 'btn-success' : 'btn-outline-secondary'}`}
-              onClick={() => { setStatus('Completed'); setIsOverdue(false); }}
-            >
-              Completed
-            </button>
-          </div>
+      <div className="crm-card p-3 mb-4">
+        <div className="d-flex flex-wrap gap-2">
+          <button
+            type="button"
+            className={`btn btn-sm ${status === '' && !isOverdue ? 'btn-primary' : 'btn-outline-secondary'}`}
+            onClick={() => { setStatus(''); setIsOverdue(false); }}
+          >
+            All Follow-Ups
+          </button>
+          <button
+            type="button"
+            className={`btn btn-sm ${status === 'Planned' && !isOverdue ? 'btn-primary' : 'btn-outline-secondary'}`}
+            onClick={() => { setStatus('Planned'); setIsOverdue(false); }}
+          >
+            Planned / Upcoming
+          </button>
+          <button
+            type="button"
+            className={`btn btn-sm ${isOverdue ? 'btn-danger' : 'btn-outline-danger'}`}
+            onClick={() => { setStatus(''); setIsOverdue(true); }}
+          >
+            <i className="bi bi-exclamation-circle-fill me-1"></i> Overdue Tasks
+          </button>
+          <button
+            type="button"
+            className={`btn btn-sm ${status === 'Completed' ? 'btn-primary' : 'btn-outline-secondary'}`}
+            onClick={() => { setStatus('Completed'); setIsOverdue(false); }}
+          >
+            Completed
+          </button>
         </div>
       </div>
 
-      {/* Follow-Ups Table */}
-      <div className="crm-table-card shadow-sm">
+      {/* Table */}
+      <div className="crm-table-container">
         <div className="table-responsive">
-          <table className="table crm-table table-hover mb-0">
+          <table className="crm-table">
             <thead>
               <tr>
                 <th>Scheduled Date</th>
-                <th>Type</th>
-                <th>Subject</th>
-                <th>Related Record</th>
+                <th>Channel Type</th>
+                <th>Subject & Agenda</th>
+                <th>Target Contact</th>
                 <th>Assigned To</th>
                 <th>Status</th>
                 <th className="text-end">Actions</th>
@@ -212,14 +210,14 @@ const FollowUps = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-4">
-                    <div className="spinner-border spinner-border-sm text-primary me-2"></div>
-                    Loading follow-ups...
+                  <td colSpan="7" className="text-center py-4 text-secondary">
+                    <span className="spinner-border spinner-border-sm me-2 text-primary"></span>
+                    Fetching follow-ups...
                   </td>
                 </tr>
               ) : followUps.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-4 text-muted">No follow-up records found.</td>
+                  <td colSpan="7" className="text-center py-4 text-muted">No scheduled follow-up touchpoints found.</td>
                 </tr>
               ) : (
                 followUps.map((f) => {
@@ -227,7 +225,7 @@ const FollowUps = () => {
                   const isOverdueNow = isPast && f.status === 'Planned';
 
                   return (
-                    <tr key={f._id} className={isOverdueNow ? 'table-danger bg-opacity-25' : ''}>
+                    <tr key={f._id} style={isOverdueNow ? { backgroundColor: '#FEF2F2' } : {}}>
                       <td>
                         <div className="fw-semibold">
                           {new Date(f.followUpDate).toLocaleDateString()}
@@ -235,7 +233,7 @@ const FollowUps = () => {
                         <small className="text-muted">{new Date(f.followUpDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
                       </td>
                       <td>
-                        <span className="badge bg-light text-dark border">
+                        <span className="badge-pill badge-secondary-soft">
                           <i className={`bi ${f.followUpType === 'Call' ? 'bi-telephone' : f.followUpType === 'Meeting' ? 'bi-people' : f.followUpType === 'Email' ? 'bi-envelope' : 'bi-camera-video'} me-1 text-primary`}></i>
                           {f.followUpType}
                         </span>
@@ -247,22 +245,22 @@ const FollowUps = () => {
                       <td>
                         {f.customerId ? (
                           <div>
-                            <span className="badge bg-primary bg-opacity-10 text-primary me-1">Customer</span>
-                            <span className="fw-semibold">{f.customerId.customerName}</span>
+                            <span className="badge-pill badge-primary-soft me-1">Customer</span>
+                            <span className="fw-semibold small">{f.customerId.customerName}</span>
                           </div>
                         ) : f.leadId ? (
                           <div>
-                            <span className="badge bg-info bg-opacity-10 text-info me-1">Lead</span>
-                            <span className="fw-semibold">{f.leadId.leadName}</span>
+                            <span className="badge-pill badge-secondary-soft me-1">Lead</span>
+                            <span className="fw-semibold small">{f.leadId.leadName}</span>
                           </div>
                         ) : '—'}
                       </td>
-                      <td><small>{f.assignedTo?.name || 'Unassigned'}</small></td>
+                      <td><small className="text-secondary">{f.assignedTo?.name || 'Unassigned'}</small></td>
                       <td>
                         {isOverdueNow ? (
-                          <span className="badge bg-danger badge-pulse">OVERDUE</span>
+                          <span className="badge-pill badge-danger-soft fw-bold">OVERDUE</span>
                         ) : (
-                          <span className={`badge ${f.status === 'Completed' ? 'bg-success' : f.status === 'Cancelled' ? 'bg-secondary' : 'bg-primary'}`}>
+                          <span className={`badge-pill ${f.status === 'Completed' ? 'badge-success-soft' : 'badge-primary-soft'}`}>
                             {f.status}
                           </span>
                         )}
@@ -270,9 +268,9 @@ const FollowUps = () => {
                       <td className="text-end">
                         {f.status === 'Planned' && (
                           <button
-                            className="btn btn-outline-success btn-sm"
+                            className="btn btn-outline-primary btn-sm"
                             onClick={() => handleMarkComplete(f._id)}
-                            title="Mark as Completed"
+                            title="Complete"
                           >
                             <i className="bi bi-check-lg me-1"></i> Complete
                           </button>
@@ -287,40 +285,40 @@ const FollowUps = () => {
         </div>
       </div>
 
-      {/* Schedule Follow-Up Modal */}
+      {/* Schedule Modal */}
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}>
           <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content border-0 shadow">
-              <div className="modal-header bg-light">
-                <h5 className="modal-title fw-bold">Schedule Future Touchpoint / Follow-Up</h5>
+            <div className="modal-content border-0">
+              <div className="modal-header">
+                <h5 className="modal-title fw-bold" style={{ color: '#0F172A' }}>Schedule Follow-Up Touchpoint</h5>
                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
               <form onSubmit={handleFormSubmit}>
                 <div className="modal-body p-4">
                   <div className="mb-3">
                     <label className="form-label">Link Touchpoint To:</label>
-                    <div className="btn-group w-100" role="group">
+                    <div className="btn-group w-100">
                       <button
                         type="button"
-                        className={`btn ${formData.relatedType === 'Customer' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        className={`btn btn-sm ${formData.relatedType === 'Customer' ? 'btn-primary' : 'btn-outline-secondary'}`}
                         onClick={() => setFormData({ ...formData, relatedType: 'Customer' })}
                       >
-                        Existing Customer
+                        Customer Account
                       </button>
                       <button
                         type="button"
-                        className={`btn ${formData.relatedType === 'Lead' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        className={`btn btn-sm ${formData.relatedType === 'Lead' ? 'btn-primary' : 'btn-outline-secondary'}`}
                         onClick={() => setFormData({ ...formData, relatedType: 'Lead' })}
                       >
-                        Prospective Lead
+                        Lead Prospect
                       </button>
                     </div>
                   </div>
 
                   {formData.relatedType === 'Customer' ? (
                     <div className="mb-3">
-                      <label className="form-label">Select Customer <span className="text-danger">*</span></label>
+                      <label className="form-label">Customer Account <span className="text-danger">*</span></label>
                       <select
                         className="form-select"
                         value={formData.customerId}
@@ -328,13 +326,13 @@ const FollowUps = () => {
                         required
                       >
                         {customers.map((c) => (
-                          <option key={c._id} value={c._id}>{c.customerName} ({c.customerCode})</option>
+                          <option key={c._id} value={c._id}>{c.customerName}</option>
                         ))}
                       </select>
                     </div>
                   ) : (
                     <div className="mb-3">
-                      <label className="form-label">Select Lead <span className="text-danger">*</span></label>
+                      <label className="form-label">Lead Contact <span className="text-danger">*</span></label>
                       <select
                         className="form-select"
                         value={formData.leadId}
@@ -342,7 +340,7 @@ const FollowUps = () => {
                         required
                       >
                         {leads.map((l) => (
-                          <option key={l._id} value={l._id}>{l.leadName} ({l.companyName || 'No Company'})</option>
+                          <option key={l._id} value={l._id}>{l.leadName}</option>
                         ))}
                       </select>
                     </div>
@@ -350,20 +348,20 @@ const FollowUps = () => {
 
                   <div className="row g-2 mb-3">
                     <div className="col-6">
-                      <label className="form-label">Interaction Type</label>
+                      <label className="form-label">Channel</label>
                       <select
                         className="form-select"
                         value={formData.followUpType}
                         onChange={(e) => setFormData({ ...formData, followUpType: e.target.value })}
                       >
                         <option value="Call">Phone Call</option>
-                        <option value="Meeting">In-Person Meeting</option>
-                        <option value="VideoConference">Video Conference</option>
-                        <option value="Email">Email Follow-Up</option>
+                        <option value="Meeting">Meeting</option>
+                        <option value="VideoConference">Video Call</option>
+                        <option value="Email">Email</option>
                       </select>
                     </div>
                     <div className="col-6">
-                      <label className="form-label">Target Date & Time <span className="text-danger">*</span></label>
+                      <label className="form-label">Date & Time <span className="text-danger">*</span></label>
                       <input
                         type="datetime-local"
                         className={`form-control ${formErrors.followUpDate ? 'is-invalid' : ''}`}
@@ -377,11 +375,11 @@ const FollowUps = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Subject / Purpose <span className="text-danger">*</span></label>
+                    <label className="form-label">Subject <span className="text-danger">*</span></label>
                     <input
                       type="text"
                       className={`form-control ${formErrors.subject ? 'is-invalid' : ''}`}
-                      placeholder="e.g. Review updated proposal terms and pricing"
+                      placeholder="e.g. Follow-up on pricing proposal"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     />
@@ -389,20 +387,19 @@ const FollowUps = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Agenda / Remarks</label>
+                    <label className="form-label">Remarks</label>
                     <textarea
                       className="form-control"
                       rows="2"
-                      placeholder="Details of follow-up discussion..."
                       value={formData.remarks}
                       onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
                     ></textarea>
                   </div>
                 </div>
-                <div className="modal-footer bg-light">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-outline-secondary" onClick={() => setShowModal(false)}>Cancel</button>
                   <button type="submit" className="btn btn-primary" disabled={saving}>
-                    {saving ? 'Scheduling...' : 'Save Follow-Up'}
+                    {saving ? 'Saving...' : 'Save Follow-Up'}
                   </button>
                 </div>
               </form>

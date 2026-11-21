@@ -8,42 +8,54 @@ const Navbar = () => {
   const getRoleBadge = (role) => {
     switch (role) {
       case 'Admin':
-        return <span className="badge bg-danger">Administrator</span>;
+        return <span className="badge-pill badge-danger-soft">Admin</span>;
       case 'Manager':
-        return <span className="badge bg-primary">Sales Manager</span>;
+        return <span className="badge-pill badge-primary-soft">Sales Manager</span>;
       case 'SalesExecutive':
-        return <span className="badge bg-success">Sales Executive</span>;
+        return <span className="badge-pill badge-success-soft">Sales Exec</span>;
       default:
-        return <span className="badge bg-secondary">{role}</span>;
+        return <span className="badge-pill badge-secondary-soft">{role}</span>;
     }
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark shadow-sm" style={{ backgroundColor: '#1E3A8A' }}>
+    <nav className="navbar navbar-expand-lg crm-navbar sticky-top">
       <div className="container-fluid px-3">
-        <Link className="navbar-brand d-flex align-items-center fw-bold" to="/dashboard">
-          <i className="bi bi-diagram-3-fill me-2 fs-4 text-warning"></i>
-          <span>AcxiomCRM</span>
+        {/* Brand */}
+        <Link className="navbar-brand d-flex align-items-center gap-2 text-white text-decoration-none" to="/dashboard">
+          <div className="crm-brand-icon">
+            <i className="bi bi-intersect"></i>
+          </div>
+          <div>
+            <span className="fw-bold fs-5 tracking-tight">Acxiom<span style={{ color: '#60A5FA' }}>CRM</span></span>
+          </div>
         </Link>
 
-        <div className="d-flex align-items-center ms-auto">
+        {/* User Pill & Sign Out */}
+        <div className="d-flex align-items-center ms-auto gap-3">
           {user && (
-            <div className="d-flex align-items-center text-white me-3">
-              <i className="bi bi-person-circle fs-4 me-2"></i>
-              <div className="d-none d-md-block text-end me-3">
-                <div className="fw-semibold lh-1">{user.name}</div>
-                <small className="text-light opacity-75">{user.email}</small>
+            <>
+              <div className="user-profile-pill d-none d-sm-flex">
+                <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{ width: '28px', height: '28px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                  {user.name.charAt(0)}
+                </div>
+                <div className="d-flex flex-column text-start">
+                  <span className="text-white fw-semibold small lh-1">{user.name}</span>
+                  <span className="text-white-50" style={{ fontSize: '0.7rem' }}>{user.email}</span>
+                </div>
+                <div className="ms-1">{getRoleBadge(user.role)}</div>
               </div>
-              <div className="me-3">{getRoleBadge(user.role)}</div>
+
               <button
                 onClick={logout}
-                className="btn btn-outline-light btn-sm d-flex align-items-center"
-                title="Logout"
+                className="btn btn-sm btn-outline-light d-flex align-items-center gap-1 py-1 px-3"
+                style={{ borderRadius: '8px', fontSize: '0.825rem', borderColor: 'rgba(255,255,255,0.2)' }}
+                title="Sign Out"
               >
-                <i className="bi bi-box-arrow-right me-1"></i>
-                <span className="d-none d-sm-inline">Sign Out</span>
+                <i className="bi bi-box-arrow-right"></i>
+                <span className="d-none d-md-inline">Sign Out</span>
               </button>
-            </div>
+            </>
           )}
         </div>
       </div>

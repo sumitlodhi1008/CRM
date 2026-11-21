@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import Swal from 'sweetalert2';
@@ -53,7 +54,7 @@ const Opportunities = () => {
       const res = await api.get('/customers?limit=100');
       setCustomers(res.data.data);
     } catch (err) {
-      console.error('Error fetching customer list:', err);
+      console.error(err);
     }
   };
 
@@ -123,19 +124,16 @@ const Opportunities = () => {
       errors.customerId = 'Associated Customer is required.';
     }
 
-    // Business validation rule 1: Amount must be > 0
     const numAmount = Number(formData.amount);
     if (!formData.amount || isNaN(numAmount) || numAmount <= 0) {
       errors.amount = 'Opportunity Amount must be greater than 0.';
     }
 
-    // Business validation rule 2: Probability must be 0 to 100
     const numProb = Number(formData.probability);
     if (isNaN(numProb) || numProb < 0 || numProb > 100) {
       errors.probability = 'Probability must be between 0 and 100.';
     }
 
-    // Business validation rule 3: Expected Close Date cannot be in the past
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const closeDate = new Date(formData.expectedCloseDate);
@@ -155,16 +153,15 @@ const Opportunities = () => {
     try {
       if (editingOpp) {
         await api.put(`/opportunities/${editingOpp._id}`, formData);
-        Swal.fire('Success', 'Opportunity details updated successfully.', 'success');
+        Swal.fire({ title: 'Updated', text: 'Opportunity deal saved.', icon: 'success', confirmButtonColor: '#2563EB' });
       } else {
         await api.post('/opportunities', formData);
-        Swal.fire('Success', 'New Opportunity registered successfully.', 'success');
+        Swal.fire({ title: 'Created', text: 'New Opportunity added to active pipeline.', icon: 'success', confirmButtonColor: '#2563EB' });
       }
       setShowModal(false);
       fetchOpportunities();
     } catch (err) {
-      const msg = err.response?.data?.detail || 'Failed to save opportunity.';
-      Swal.fire('Validation Error', msg, 'error');
+      Swal.fire('Validation Error', err.response?.data?.detail || 'Failed to save opportunity.', 'error');
     } finally {
       setSaving(false);
     }
@@ -173,7 +170,7 @@ const Opportunities = () => {
   const handleQuickStageUpdate = async (oppId, targetStage) => {
     try {
       await api.put(`/opportunities/${oppId}`, { stage: targetStage });
-      Swal.fire('Stage Updated', `Deal transitioned to ${targetStage}.`, 'success');
+      Swal.fire({ title: 'Stage Updated', text: `Opportunity moved to ${targetStage}.`, icon: 'success', confirmButtonColor: '#2563EB' });
       fetchOpportunities();
     } catch (err) {
       Swal.fire('Error', err.response?.data?.detail || 'Failed to update stage.', 'error');
@@ -182,26 +179,28 @@ const Opportunities = () => {
 
   return (
     <div className="container-fluid p-4">
+      {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1">Opportunity Pipeline Management</h2>
-          <p className="text-muted small mb-0">Track active deals, pipeline stages, and weighted revenue forecasting.</p>
+          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Opportunity Pipeline</h2>
+          <p className="text-secondary small mb-0">Track commercial deals, stage progressions, and probability-weighted revenues.</p>
         </div>
-        <button className="btn btn-primary d-flex align-items-center" onClick={() => handleOpenModal()}>
-          <i className="bi bi-plus-circle-fill me-2"></i> Register New Opportunity
+        <button className="btn btn-primary d-flex align-items-center gap-2" onClick={() => handleOpenModal()}>
+          <i className="bi bi-briefcase-fill"></i>
+          <span>New Opportunity</span>
         </button>
       </div>
 
       {/* Filter Bar */}
-      <div className="card border-0 shadow-sm p-3 mb-4" style={{ borderRadius: '10px' }}>
-        <form onSubmit={handleSearchSubmit} className="row g-3 align-items-center">
+      <div className="crm-card p-3 mb-4">
+        <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
           <div className="col-12 col-md-5">
             <div className="input-group">
-              <span className="input-group-text bg-white"><i className="bi bi-search text-muted"></i></span>
+              <span className="input-group-text bg-white border-end-0"><i className="bi bi-search text-muted"></i></span>
               <input
                 type="text"
-                className="form-control"
-                placeholder="Search Opportunity name or source..."
+                className="form-control border-start-0"
+                placeholder="Search Opportunity Name, Source..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -218,7 +217,7 @@ const Opportunities = () => {
             </select>
           </div>
           <div className="col-12 col-md-4 d-flex gap-2">
-            <button type="submit" className="btn btn-primary flex-fill">Apply Filters</button>
+            <button type="submit" className="btn btn-primary flex-fill">Apply</button>
             <button
               type="button"
               className="btn btn-outline-secondary"
@@ -230,19 +229,19 @@ const Opportunities = () => {
         </form>
       </div>
 
-      {/* Opportunities Table */}
-      <div className="crm-table-card shadow-sm mb-4">
+      {/* Table */}
+      <div className="crm-table-container mb-4">
         <div className="table-responsive">
-          <table className="table crm-table table-hover mb-0">
+          <table className="crm-table">
             <thead>
               <tr>
                 <th>Deal Name</th>
-                <th>Customer Account</th>
-                <th>Amount ($)</th>
+                <th>Account</th>
+                <th>Gross Value ($)</th>
                 <th>Stage</th>
                 <th>Probability</th>
-                <th>Weighted Value ($)</th>
-                <th>Expected Close</th>
+                <th>Weighted Forecast ($)</th>
+                <th>Target Close</th>
                 <th>Owner</th>
                 <th className="text-end">Actions</th>
               </tr>
@@ -250,14 +249,14 @@ const Opportunities = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="9" className="text-center py-4">
-                    <div className="spinner-border spinner-border-sm text-primary me-2"></div>
-                    Loading opportunities...
+                  <td colSpan="9" className="text-center py-4 text-secondary">
+                    <span className="spinner-border spinner-border-sm me-2 text-primary"></span>
+                    Fetching opportunities...
                   </td>
                 </tr>
               ) : opportunities.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className="text-center py-4 text-muted">No opportunities found.</td>
+                  <td colSpan="9" className="text-center py-4 text-muted">No deals found.</td>
                 </tr>
               ) : (
                 opportunities.map((opp) => (
@@ -268,7 +267,7 @@ const Opportunities = () => {
                     </td>
                     <td>
                       {opp.customerId ? (
-                        <Link to={`/customers/${opp.customerId._id}`} className="text-decoration-none fw-semibold">
+                        <Link to={`/customers/${opp.customerId._id}`} className="text-decoration-none fw-semibold" style={{ color: '#2563EB' }}>
                           {opp.customerId.customerName}
                         </Link>
                       ) : '—'}
@@ -277,37 +276,37 @@ const Opportunities = () => {
                     <td>
                       <select
                         className="form-select form-select-sm fw-semibold"
-                        style={{ width: '130px' }}
+                        style={{ width: '135px', borderRadius: '6px' }}
                         value={opp.stage}
                         onChange={(e) => handleQuickStageUpdate(opp._id, e.target.value)}
                       >
                         <option value="Qualification">Qualification</option>
                         <option value="Proposal">Proposal</option>
                         <option value="Negotiation">Negotiation</option>
-                        <option value="Won">Won</option>
-                        <option value="Lost">Lost</option>
+                        <option value="Won">Closed Won</option>
+                        <option value="Lost">Closed Lost</option>
                       </select>
                     </td>
                     <td>
                       <div className="d-flex align-items-center">
-                        <span className="me-2 fw-semibold">{opp.probability}%</span>
-                        <div className="progress flex-fill" style={{ height: '6px', width: '50px' }}>
+                        <span className="me-2 fw-semibold small">{opp.probability}%</span>
+                        <div className="progress flex-fill" style={{ height: '5px', width: '50px', backgroundColor: '#E2E8F0' }}>
                           <div
-                            className={`progress-bar ${opp.probability >= 70 ? 'bg-success' : opp.probability >= 40 ? 'bg-primary' : 'bg-warning'}`}
-                            style={{ width: `${opp.probability}%` }}
+                            className="progress-bar"
+                            style={{ width: `${opp.probability}%`, backgroundColor: '#2563EB' }}
                           ></div>
                         </div>
                       </div>
                     </td>
-                    <td className="fw-bold" style={{ color: '#0D9488' }}>
+                    <td className="fw-bold" style={{ color: '#2563EB' }}>
                       ${((opp.amount * opp.probability) / 100).toLocaleString()}
                     </td>
                     <td>
-                      <small>{new Date(opp.expectedCloseDate).toLocaleDateString()}</small>
+                      <small className="text-secondary">{new Date(opp.expectedCloseDate).toLocaleDateString()}</small>
                     </td>
-                    <td><small>{opp.assignedTo?.name || 'Unassigned'}</small></td>
+                    <td><small className="text-secondary">{opp.assignedTo?.name || 'Unassigned'}</small></td>
                     <td className="text-end">
-                      <button className="btn btn-outline-primary btn-sm" onClick={() => handleOpenModal(opp)} title="Edit Deal">
+                      <button className="btn btn-outline-secondary btn-sm" onClick={() => handleOpenModal(opp)} title="Edit">
                         <i className="bi bi-pencil"></i>
                       </button>
                     </td>
@@ -318,30 +317,25 @@ const Opportunities = () => {
           </table>
         </div>
 
-        {/* Pagination Bar */}
         {totalPages > 1 && (
           <div className="p-3 d-flex justify-content-between align-items-center border-top">
             <span className="small text-muted">Page {page} of {totalPages}</span>
             <div className="btn-group btn-group-sm">
-              <button className="btn btn-outline-secondary" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
-                Previous
-              </button>
-              <button className="btn btn-outline-secondary" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>
-                Next
-              </button>
+              <button className="btn btn-outline-secondary" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Previous</button>
+              <button className="btn btn-outline-secondary" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Next</button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Register / Edit Opportunity Modal */}
+      {/* Modal */}
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}>
           <div className="modal-dialog modal-lg modal-dialog-centered">
-            <div className="modal-content border-0 shadow">
-              <div className="modal-header bg-light">
-                <h5 className="modal-title fw-bold">
-                  {editingOpp ? `Edit Opportunity: ${editingOpp.opportunityName}` : 'Register New Sales Opportunity'}
+            <div className="modal-content border-0">
+              <div className="modal-header">
+                <h5 className="modal-title fw-bold" style={{ color: '#0F172A' }}>
+                  {editingOpp ? `Edit Deal: ${editingOpp.opportunityName}` : 'Register Sales Opportunity'}
                 </h5>
                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
@@ -353,7 +347,7 @@ const Opportunities = () => {
                       <input
                         type="text"
                         className={`form-control ${formErrors.opportunityName ? 'is-invalid' : ''}`}
-                        placeholder="e.g. Enterprise Cloud Infrastructure Migration"
+                        placeholder="e.g. Cloud Infrastructure Modernization"
                         value={formData.opportunityName}
                         onChange={(e) => setFormData({ ...formData, opportunityName: e.target.value })}
                       />
@@ -361,22 +355,22 @@ const Opportunities = () => {
                     </div>
 
                     <div className="col-12 col-md-4">
-                      <label className="form-label">Customer Account <span className="text-danger">*</span></label>
+                      <label className="form-label">Account <span className="text-danger">*</span></label>
                       <select
                         className={`form-select ${formErrors.customerId ? 'is-invalid' : ''}`}
                         value={formData.customerId}
                         onChange={(e) => setFormData({ ...formData, customerId: e.target.value })}
                       >
-                        <option value="">Select Customer...</option>
+                        <option value="">Select Account...</option>
                         {customers.map((c) => (
-                          <option key={c._id} value={c._id}>{c.customerName} ({c.customerCode})</option>
+                          <option key={c._id} value={c._id}>{c.customerName}</option>
                         ))}
                       </select>
                       {formErrors.customerId && <div className="invalid-feedback">{formErrors.customerId}</div>}
                     </div>
 
                     <div className="col-12 col-md-4">
-                      <label className="form-label">Deal Amount ($) <span className="text-danger">*</span></label>
+                      <label className="form-label">Deal Value ($) <span className="text-danger">*</span></label>
                       <input
                         type="number"
                         className={`form-control ${formErrors.amount ? 'is-invalid' : ''}`}
@@ -389,7 +383,7 @@ const Opportunities = () => {
                     </div>
 
                     <div className="col-12 col-md-4">
-                      <label className="form-label">Pipeline Stage</label>
+                      <label className="form-label">Stage</label>
                       <select
                         className="form-select"
                         value={formData.stage}
@@ -426,11 +420,10 @@ const Opportunities = () => {
                         onChange={(e) => setFormData({ ...formData, expectedCloseDate: e.target.value })}
                       />
                       {formErrors.expectedCloseDate && <div className="invalid-feedback">{formErrors.expectedCloseDate}</div>}
-                      <small className="text-muted">Cannot be set in the past for active opportunities.</small>
                     </div>
 
                     <div className="col-12 col-md-6">
-                      <label className="form-label">Deal Source</label>
+                      <label className="form-label">Lead Source</label>
                       <select
                         className="form-select"
                         value={formData.source}
@@ -446,15 +439,17 @@ const Opportunities = () => {
 
                     {formData.amount > 0 && (
                       <div className="col-12">
-                        <div className="alert alert-info py-2 mb-0 d-flex justify-content-between align-items-center">
-                          <span>Derived Weighted Pipeline Calculation:</span>
-                          <strong className="fs-6">${((Number(formData.amount) * Number(formData.probability)) / 100).toLocaleString()}</strong>
+                        <div className="p-3 rounded-2 d-flex justify-content-between align-items-center" style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE' }}>
+                          <span className="small fw-semibold text-primary">Weighted Pipeline Value (Amount × Prob / 100):</span>
+                          <strong className="fs-6" style={{ color: '#2563EB' }}>
+                            ${((Number(formData.amount) * Number(formData.probability)) / 100).toLocaleString()}
+                          </strong>
                         </div>
                       </div>
                     )}
 
                     <div className="col-12">
-                      <label className="form-label">Opportunity Notes / Scope Summary</label>
+                      <label className="form-label">Deal Notes</label>
                       <textarea
                         className="form-control"
                         rows="2"
@@ -464,10 +459,10 @@ const Opportunities = () => {
                     </div>
                   </div>
                 </div>
-                <div className="modal-footer bg-light">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-outline-secondary" onClick={() => setShowModal(false)}>Cancel</button>
                   <button type="submit" className="btn btn-primary" disabled={saving}>
-                    {saving ? 'Saving...' : editingOpp ? 'Update Opportunity' : 'Save Opportunity'}
+                    {saving ? 'Saving...' : editingOpp ? 'Update Deal' : 'Save Deal'}
                   </button>
                 </div>
               </form>

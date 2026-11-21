@@ -1,44 +1,47 @@
-# DESIGN SYSTEM SPECIFICATION — AcxiomCRM
+# DESIGN SYSTEM SPECIFICATION (2-Color System) — AcxiomCRM
 
-## 1. Color Palette
+## 1. Strict 2-Color Master Palette
 
 ```
-Primary Brand:         #1E3A8A (Deep Navy / Executive Blue)
-Secondary / Accent:    #0D9488 (Teal / Modern Professional)
-Success / Converted:   #16A34A (Emerald Green)
-Warning / Attention:   #D97706 (Amber / Warm Gold)
-Danger / Overdue:      #DC2626 (Crimson Red)
-Neutral Light (Bg):    #F8FAFC (Slate Light 50)
-Neutral Dark (Text):   #0F172A (Slate 900)
-Card / Surface:        #FFFFFF (Pure White)
-Border / Divider:      #E2E8F0 (Slate 200)
+========================================================================================
+1. PRIMARY COLOR:      #2563EB (Royal Cobalt Blue)
+   - Usage: Primary CTAs, Active Navigation Pill, Metric Value Highlights, Focused Rings
+   - Light Tint: #EFF6FF (Hover backgrounds, soft tag backgrounds)
+   - Dark Hover: #1D4ED8
+
+2. SECONDARY COLOR:    #0F172A (Executive Deep Slate)
+   - Usage: Master Navigation Bar, High-Contrast Typography, Table Headers, Card Borders
+   - Light Tint: #1E293B
+
+SUPPORTIVE NEUTRALS:
+- Canvas Background:   #F8FAFC (Clean Light Slate)
+- Surface Cards:       #FFFFFF (Pure White)
+- Hairline Borders:    #E2E8F0 (Slate 200)
+- Secondary Text:      #475569 (Slate 600)
+- Muted Text:          #94A3B8 (Slate 400)
+
+FUNCTIONAL SIGNALS (Reserved strictly for status meaning):
+- Success / Won:       #10B981 (Soft Emerald Pill: #ECFDF5)
+- Danger / Lost:       #EF4444 (Soft Crimson Pill: #FEF2F2)
+- Warning / Attention: #F59E0B (Soft Amber Pill: #FFFBEB)
+========================================================================================
 ```
 
 ---
 
 ## 2. Typography
-- **Primary Typeface**: `Inter`, `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`.
-- **Monospace Typeface**: `"Fira Code", SFMono-Regular, Menlo, Monaco, Consolas, monospace` (for Codes, IDs, and Audit JSON snapshots).
+- **Primary Typeface**: `Plus Jakarta Sans`, `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`.
+- **Monospace Typeface**: `"Fira Code", monospace` (for Customer Code, Lead Code, IP, Timestamps).
 - **Scale**:
-  - Page Titles (`h1`): `1.75rem` (28px), Semi-bold (600), Line-height 1.3
-  - Section Headings (`h2`): `1.375rem` (22px), Semi-bold (600), Line-height 1.35
-  - Card Titles (`h3`): `1.125rem` (18px), Medium (500), Line-height 1.4
-  - Body Text: `0.9375rem` (15px), Regular (400), Line-height 1.5
-  - Captions & Badges: `0.75rem` (12px), Medium (500), Uppercase letter-spacing `0.05em`
+  - H1 / H2 Page Headers: `1.5rem` - `1.75rem` (24px - 28px), Bold (700)
+  - Card Titles: `0.725rem` (12px), Bold (700), Uppercase letter-spacing `0.05em`
+  - Body Text: `0.885rem` (14px), Regular (400), Line-height 1.5
+  - Badge Pills: `0.725rem` (11.5px), Semi-bold (600), Rounded `9999px`
 
 ---
 
-## 3. Spacing & Elevation System
-- **Spacing Units**: 4px base multiplier (4px, 8px, 12px, 16px, 24px, 32px, 48px).
-- **Elevation / Shadows**:
-  - `card-shadow-sm`: `0 1px 2px 0 rgba(0, 0, 0, 0.05)`
-  - `card-shadow-md`: `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)`
-  - `modal-shadow-lg`: `0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)`
-
----
-
-## 4. Reusable UI Components
-1. **MetricCard**: Reusable dashboard summary widget rendering title, numeric value, percentage change, and colored icon.
-2. **StatusBadge**: Centralized component mapping entity status to semantic badge styles.
-3. **FilterBar**: Collapsible search bar supporting text search, dropdown select filters, date picker ranges, and Reset buttons.
-4. **AuditHistoryViewer**: Collapsible timeline widget presenting historical audits with formatted diff highlighting.
+## 3. UI Component Standards
+1. **KPI Metric Cards**: Compact surface card with `kpi-title` in muted uppercase, `kpi-value` in bold 28px, and a high-contrast icon wrapper.
+2. **Pill Badges**: `.badge-pill` with soft background and high-contrast text (`badge-primary-soft`, `badge-secondary-soft`, `badge-success-soft`, `badge-danger-soft`).
+3. **Table Container**: Bordered, rounded `12px` container with subtle borders and hover row feedback.
+4. **Modals & Forms**: Rounded `14px` dialogs with subtle backdrop blur, hairline dividers, and consistent `.btn-primary` and `.btn-outline-secondary` controls.

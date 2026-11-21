@@ -54,7 +54,7 @@ const Reports = () => {
         });
       }
     } catch (err) {
-      console.error('Error fetching report:', err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -105,58 +105,61 @@ const Reports = () => {
 
   return (
     <div className="container-fluid p-4">
+      {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1">Analytical Reports Engine</h2>
-          <p className="text-muted small mb-0">Cross-cutting business intelligence, pipeline forecasting, and sales performance reports.</p>
+          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Reports & Analytics</h2>
+          <p className="text-secondary small mb-0">Cross-cutting revenue pipeline, conversion analytics, and historical audits.</p>
         </div>
-        <button className="btn btn-outline-success d-flex align-items-center" onClick={exportToCSV}>
-          <i className="bi bi-file-earmark-excel me-2"></i> Export Report to CSV
+        <button className="btn btn-outline-primary d-flex align-items-center gap-2" onClick={exportToCSV}>
+          <i className="bi bi-download"></i>
+          <span>Export CSV</span>
         </button>
       </div>
 
-      {/* 8 Report Switcher Tabs */}
-      <div className="card border-0 shadow-sm p-3 mb-4" style={{ borderRadius: '10px' }}>
-        <div className="d-flex flex-wrap gap-2">
+      {/* Tabs */}
+      <div className="crm-card p-2 mb-4">
+        <div className="d-flex flex-wrap gap-1">
           {[
-            { id: 'pipeline', label: '1. Pipeline Report', icon: 'bi-bar-chart' },
-            { id: 'customers', label: '2. Customer Report', icon: 'bi-building' },
-            { id: 'leads', label: '3. Lead Report', icon: 'bi-funnel' },
-            { id: 'opportunities', label: '4. Opportunity Report', icon: 'bi-briefcase' },
-            { id: 'followups', label: '5. Follow-Up Report', icon: 'bi-calendar-check' },
-            { id: 'conversion', label: '6. Sales & Conversion Report', icon: 'bi-arrow-repeat' },
-            { id: 'activities', label: '7. User Activity Report', icon: 'bi-clock-history' }
+            { id: 'pipeline', label: 'Pipeline Forecast' },
+            { id: 'customers', label: 'Customer Directory' },
+            { id: 'leads', label: 'Lead Funnel' },
+            { id: 'opportunities', label: 'Opportunities' },
+            { id: 'followups', label: 'Touchpoint Schedule' },
+            { id: 'conversion', label: 'Conversion & Win/Loss' },
+            { id: 'activities', label: 'Activity Feed' }
           ].map(r => (
             <button
               key={r.id}
-              className={`btn btn-sm ${activeReport === r.id ? 'btn-primary' : 'btn-outline-secondary'}`}
+              className={`btn btn-sm ${activeReport === r.id ? 'btn-primary' : 'btn-light bg-transparent text-secondary border-0'}`}
+              style={{ fontWeight: 600, borderRadius: '6px' }}
               onClick={() => setActiveReport(r.id)}
             >
-              <i className={`bi ${r.icon} me-1`}></i> {r.label}
+              {r.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Report Content Stage */}
-      <div className="crm-table-card shadow-sm p-4">
+      {/* Report Container */}
+      <div className="crm-table-container p-4">
         {loading ? (
-          <div className="text-center py-5">
-            <div className="spinner-border text-primary" role="status"></div>
-            <div className="mt-2 text-muted">Compiling report data...</div>
+          <div className="text-center py-5 text-secondary">
+            <span className="spinner-border text-primary me-2"></span>
+            Generating report dataset...
           </div>
         ) : (
           <div>
             {/* 1. PIPELINE REPORT */}
             {activeReport === 'pipeline' && reportData && (
               <div>
-                <h5 className="fw-bold mb-3">Stage-Wise Pipeline Breakdown</h5>
+                <h5 className="fw-bold mb-3" style={{ color: '#0F172A' }}>Stage-Wise Pipeline Breakdown</h5>
                 <div className="table-responsive mb-4">
-                  <table className="table table-hover align-middle">
-                    <thead className="table-light">
+                  <table className="crm-table">
+                    <thead>
                       <tr>
                         <th>Pipeline Stage</th>
-                        <th>Deals Count</th>
+                        <th>Deal Count</th>
                         <th>Unweighted Pipeline Value ($)</th>
                         <th>Weighted Forecast Value ($)</th>
                       </tr>
@@ -164,10 +167,10 @@ const Reports = () => {
                     <tbody>
                       {reportData.stageSummary?.map(s => (
                         <tr key={s._id}>
-                          <td><span className="badge bg-primary">{s._id}</span></td>
+                          <td><span className="badge-pill badge-primary-soft">{s._id}</span></td>
                           <td className="fw-semibold">{s.totalDeals}</td>
                           <td className="fw-bold">${s.totalAmount?.toLocaleString()}</td>
-                          <td className="fw-bold text-teal" style={{ color: '#0D9488' }}>
+                          <td className="fw-bold text-primary">
                             ${Math.round(s.weightedAmount || 0).toLocaleString()}
                           </td>
                         </tr>
@@ -176,10 +179,10 @@ const Reports = () => {
                   </table>
                 </div>
 
-                <h5 className="fw-bold mb-3 mt-4">Owner-Wise Pipeline Allocation</h5>
+                <h5 className="fw-bold mb-3 mt-4" style={{ color: '#0F172A' }}>Owner-Wise Allocation</h5>
                 <div className="table-responsive">
-                  <table className="table table-hover align-middle">
-                    <thead className="table-light">
+                  <table className="crm-table">
+                    <thead>
                       <tr>
                         <th>Sales Representative</th>
                         <th>Deals Count</th>
@@ -189,7 +192,7 @@ const Reports = () => {
                     <tbody>
                       {reportData.ownerSummary?.map(o => (
                         <tr key={o.ownerId || 'unassigned'}>
-                          <td className="fw-semibold">{o.ownerName || 'Unassigned'}</td>
+                          <td className="fw-semibold text-dark">{o.ownerName || 'Unassigned'}</td>
                           <td>{o.totalDeals}</td>
                           <td className="fw-bold">${o.totalAmount?.toLocaleString()}</td>
                         </tr>
@@ -203,11 +206,11 @@ const Reports = () => {
             {/* 2. CUSTOMER REPORT */}
             {activeReport === 'customers' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-hover align-middle">
-                  <thead className="table-light">
+                <table className="crm-table">
+                  <thead>
                     <tr>
                       <th>Customer Code</th>
-                      <th>Customer Name</th>
+                      <th>Account Name</th>
                       <th>Company</th>
                       <th>Email</th>
                       <th>Phone</th>
@@ -218,13 +221,13 @@ const Reports = () => {
                   <tbody>
                     {reportData.map(c => (
                       <tr key={c._id}>
-                        <td><span className="badge bg-light text-dark font-monospace">{c.customerCode}</span></td>
-                        <td className="fw-semibold">{c.customerName}</td>
+                        <td><span className="badge-pill badge-secondary-soft font-monospace">{c.customerCode}</span></td>
+                        <td className="fw-semibold text-dark">{c.customerName}</td>
                         <td>{c.companyName || '—'}</td>
-                        <td>{c.email}</td>
-                        <td>{c.phone}</td>
-                        <td><span className={`badge ${c.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>{c.status}</span></td>
-                        <td><small>{new Date(c.createdAt).toLocaleDateString()}</small></td>
+                        <td><small className="text-secondary">{c.email}</small></td>
+                        <td><small className="text-secondary">{c.phone}</small></td>
+                        <td><span className={`badge-pill ${c.status === 'Active' ? 'badge-success-soft' : 'badge-secondary-soft'}`}>{c.status}</span></td>
+                        <td><small className="text-secondary">{new Date(c.createdAt).toLocaleDateString()}</small></td>
                       </tr>
                     ))}
                   </tbody>
@@ -235,8 +238,8 @@ const Reports = () => {
             {/* 3. LEAD REPORT */}
             {activeReport === 'leads' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-hover align-middle">
-                  <thead className="table-light">
+                <table className="crm-table">
+                  <thead>
                     <tr>
                       <th>Lead Code</th>
                       <th>Name</th>
@@ -250,13 +253,13 @@ const Reports = () => {
                   <tbody>
                     {reportData.map(l => (
                       <tr key={l._id}>
-                        <td><span className="badge bg-light text-dark font-monospace">{l.leadCode}</span></td>
-                        <td className="fw-semibold">{l.leadName}</td>
+                        <td><span className="badge-pill badge-secondary-soft font-monospace">{l.leadCode}</span></td>
+                        <td className="fw-semibold text-dark">{l.leadName}</td>
                         <td>{l.companyName || '—'}</td>
                         <td>{l.source}</td>
-                        <td className="fw-bold">${l.expectedValue?.toLocaleString()}</td>
-                        <td><span className="badge bg-primary">{l.status}</span></td>
-                        <td><span className="badge bg-info">{l.priority}</span></td>
+                        <td className="fw-bold" style={{ color: '#2563EB' }}>${l.expectedValue?.toLocaleString()}</td>
+                        <td><span className="badge-pill badge-primary-soft">{l.status}</span></td>
+                        <td><span className="badge-pill badge-secondary-soft">{l.priority}</span></td>
                       </tr>
                     ))}
                   </tbody>
@@ -267,32 +270,32 @@ const Reports = () => {
             {/* 4. OPPORTUNITY REPORT */}
             {activeReport === 'opportunities' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-hover align-middle">
-                  <thead className="table-light">
+                <table className="crm-table">
+                  <thead>
                     <tr>
                       <th>Opportunity Name</th>
-                      <th>Customer</th>
+                      <th>Account</th>
                       <th>Amount ($)</th>
                       <th>Stage</th>
                       <th>Probability</th>
                       <th>Weighted Value ($)</th>
-                      <th>Expected Close Date</th>
+                      <th>Expected Close</th>
                       <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {reportData.map(o => (
                       <tr key={o._id}>
-                        <td className="fw-semibold">{o.opportunityName}</td>
+                        <td className="fw-semibold text-dark">{o.opportunityName}</td>
                         <td>{o.customerId?.customerName || '—'}</td>
                         <td className="fw-bold">${o.amount?.toLocaleString()}</td>
-                        <td><span className="badge bg-primary">{o.stage}</span></td>
+                        <td><span className="badge-pill badge-primary-soft">{o.stage}</span></td>
                         <td>{o.probability}%</td>
-                        <td className="fw-bold text-teal" style={{ color: '#0D9488' }}>
+                        <td className="fw-bold text-primary">
                           ${((o.amount * o.probability) / 100).toLocaleString()}
                         </td>
-                        <td><small>{new Date(o.expectedCloseDate).toLocaleDateString()}</small></td>
-                        <td><span className="badge bg-secondary">{o.status}</span></td>
+                        <td><small className="text-secondary">{new Date(o.expectedCloseDate).toLocaleDateString()}</small></td>
+                        <td><span className="badge-pill badge-secondary-soft">{o.status}</span></td>
                       </tr>
                     ))}
                   </tbody>
@@ -303,14 +306,14 @@ const Reports = () => {
             {/* 5. FOLLOW-UP REPORT */}
             {activeReport === 'followups' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-hover align-middle">
-                  <thead className="table-light">
+                <table className="crm-table">
+                  <thead>
                     <tr>
-                      <th>Scheduled Date</th>
-                      <th>Type</th>
+                      <th>Date</th>
+                      <th>Channel</th>
                       <th>Subject</th>
                       <th>Remarks</th>
-                      <th>Assigned To</th>
+                      <th>Owner</th>
                       <th>Status</th>
                     </tr>
                   </thead>
@@ -318,11 +321,11 @@ const Reports = () => {
                     {reportData.map(f => (
                       <tr key={f._id}>
                         <td>{new Date(f.followUpDate).toLocaleString()}</td>
-                        <td><span className="badge bg-light text-dark border">{f.followUpType}</span></td>
-                        <td className="fw-semibold">{f.subject}</td>
-                        <td><small className="text-muted">{f.remarks || '—'}</small></td>
+                        <td><span className="badge-pill badge-secondary-soft">{f.followUpType}</span></td>
+                        <td className="fw-semibold text-dark">{f.subject}</td>
+                        <td><small className="text-secondary">{f.remarks || '—'}</small></td>
                         <td>{f.assignedTo?.name || 'Unassigned'}</td>
-                        <td><span className="badge bg-info">{f.status}</span></td>
+                        <td><span className="badge-pill badge-primary-soft">{f.status}</span></td>
                       </tr>
                     ))}
                   </tbody>
@@ -330,23 +333,23 @@ const Reports = () => {
               </div>
             )}
 
-            {/* 6. CONVERSION & WIN/LOSS REPORT */}
+            {/* 6. CONVERSION REPORT */}
             {activeReport === 'conversion' && reportData && (
               <div className="row g-4">
                 <div className="col-12 col-md-6">
-                  <div className="card p-4 border bg-light h-100">
-                    <h5 className="fw-bold text-primary mb-3">Lead-to-Customer Conversion Efficiency</h5>
-                    <div className="display-4 fw-bold text-success mb-2">{reportData.convRate}%</div>
-                    <p className="text-muted">
-                      <strong>{reportData.convertedCount}</strong> leads successfully converted out of <strong>{reportData.totalLeads}</strong> total captured prospects.
+                  <div className="crm-card p-4">
+                    <h5 className="fw-bold mb-3" style={{ color: '#0F172A' }}>Lead Conversion Ratio</h5>
+                    <div className="display-4 fw-bold text-primary mb-2">{reportData.convRate}%</div>
+                    <p className="text-secondary small">
+                      <strong>{reportData.convertedCount}</strong> leads successfully converted out of <strong>{reportData.totalLeads}</strong> total prospects captured.
                     </p>
                   </div>
                 </div>
                 <div className="col-12 col-md-6">
-                  <div className="card p-4 border bg-light h-100">
-                    <h5 className="fw-bold text-primary mb-3">Opportunity Win Ratio (Win vs. Loss)</h5>
-                    <div className="display-4 fw-bold text-primary mb-2">{reportData.winRate}%</div>
-                    <p className="text-muted">
+                  <div className="crm-card p-4">
+                    <h5 className="fw-bold mb-3" style={{ color: '#0F172A' }}>Opportunity Win Ratio</h5>
+                    <div className="display-4 fw-bold text-success mb-2">{reportData.winRate}%</div>
+                    <p className="text-secondary small">
                       <strong>{reportData.wonCount}</strong> deals Closed-Won vs. <strong>{reportData.lostCount}</strong> deals Closed-Lost.
                     </p>
                   </div>
@@ -357,23 +360,23 @@ const Reports = () => {
             {/* 7. ACTIVITY REPORT */}
             {activeReport === 'activities' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-hover align-middle">
-                  <thead className="table-light">
+                <table className="crm-table">
+                  <thead>
                     <tr>
-                      <th>Activity Date</th>
-                      <th>Type</th>
+                      <th>Date</th>
+                      <th>Channel</th>
                       <th>Subject</th>
                       <th>Description</th>
-                      <th>Logged By</th>
+                      <th>Owner</th>
                     </tr>
                   </thead>
                   <tbody>
                     {reportData.map(a => (
                       <tr key={a._id}>
                         <td>{new Date(a.activityDate).toLocaleString()}</td>
-                        <td><span className="badge bg-dark">{a.activityType}</span></td>
-                        <td className="fw-semibold">{a.subject}</td>
-                        <td><small className="text-muted">{a.description || '—'}</small></td>
+                        <td><span className="badge-pill badge-secondary-soft">{a.activityType}</span></td>
+                        <td className="fw-semibold text-dark">{a.subject}</td>
+                        <td><small className="text-secondary">{a.description || '—'}</small></td>
                         <td>{a.assignedTo?.name || 'User'}</td>
                       </tr>
                     ))}

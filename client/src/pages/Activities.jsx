@@ -29,7 +29,7 @@ const Activities = () => {
       const res = await api.get(url);
       setActivities(res.data.data);
     } catch (err) {
-      console.error('Error fetching activities:', err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -83,7 +83,7 @@ const Activities = () => {
       };
 
       await api.post('/activities', payload);
-      Swal.fire('Logged', 'Activity logged into customer/lead history.', 'success');
+      Swal.fire({ title: 'Logged', text: 'Activity logged into history.', icon: 'success', confirmButtonColor: '#2563EB' });
       setShowModal(false);
       fetchActivities();
     } catch (err) {
@@ -95,28 +95,30 @@ const Activities = () => {
 
   const getActivityIcon = (type) => {
     switch (type) {
-      case 'Call': return <i className="bi bi-telephone-fill text-success"></i>;
+      case 'Call': return <i className="bi bi-telephone-fill text-primary"></i>;
       case 'Meeting': return <i className="bi bi-people-fill text-primary"></i>;
-      case 'Email': return <i className="bi bi-envelope-fill text-warning"></i>;
-      case 'Task': return <i className="bi bi-check2-square text-info"></i>;
-      default: return <i className="bi bi-clock-history"></i>;
+      case 'Email': return <i className="bi bi-envelope-fill text-primary"></i>;
+      case 'Task': return <i className="bi bi-check2-square text-primary"></i>;
+      default: return <i className="bi bi-clock-history text-primary"></i>;
     }
   };
 
   return (
     <div className="container-fluid p-4">
+      {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1">Omnichannel Activity Log</h2>
-          <p className="text-muted small mb-0">Record and track calls, meetings, emails, and sales tasks.</p>
+          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Activity Log</h2>
+          <p className="text-secondary small mb-0">Omnichannel history of customer conversations, meetings, and sales tasks.</p>
         </div>
-        <button className="btn btn-primary d-flex align-items-center" onClick={handleOpenModal}>
-          <i className="bi bi-plus-lg me-2"></i> Log New Activity
+        <button className="btn btn-primary d-flex align-items-center gap-2" onClick={handleOpenModal}>
+          <i className="bi bi-plus-lg"></i>
+          <span>Log Activity</span>
         </button>
       </div>
 
       {/* Filter Tabs */}
-      <div className="card border-0 shadow-sm p-3 mb-4" style={{ borderRadius: '10px' }}>
+      <div className="crm-card p-3 mb-4">
         <div className="d-flex flex-wrap gap-2">
           {['', 'Call', 'Meeting', 'Email', 'Task'].map((type) => (
             <button
@@ -125,21 +127,21 @@ const Activities = () => {
               className={`btn btn-sm ${activityType === type ? 'btn-primary' : 'btn-outline-secondary'}`}
               onClick={() => setActivityType(type)}
             >
-              {type === '' ? 'All Activities' : type}
+              {type === '' ? 'All Channels' : type}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Activity Timeline Table */}
-      <div className="crm-table-card shadow-sm">
+      {/* Table */}
+      <div className="crm-table-container">
         <div className="table-responsive">
-          <table className="table crm-table table-hover mb-0">
+          <table className="crm-table">
             <thead>
               <tr>
-                <th>Type</th>
+                <th>Channel</th>
                 <th>Subject & Description</th>
-                <th>Related Record</th>
+                <th>Relational Target</th>
                 <th>Logged By</th>
                 <th>Date & Time</th>
                 <th>Status</th>
@@ -148,40 +150,40 @@ const Activities = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="text-center py-4">
-                    <div className="spinner-border spinner-border-sm text-primary me-2"></div>
-                    Loading activities...
+                  <td colSpan="6" className="text-center py-4 text-secondary">
+                    <span className="spinner-border spinner-border-sm me-2 text-primary"></span>
+                    Fetching activities...
                   </td>
                 </tr>
               ) : activities.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="text-center py-4 text-muted">No activity entries found.</td>
+                  <td colSpan="6" className="text-center py-4 text-muted">No sales activities logged.</td>
                 </tr>
               ) : (
                 activities.map((act) => (
                   <tr key={act._id}>
                     <td>
-                      <span className="badge bg-light text-dark border p-2">
+                      <span className="badge-pill badge-primary-soft">
                         {getActivityIcon(act.activityType)} <span className="ms-1">{act.activityType}</span>
                       </span>
                     </td>
                     <td>
                       <div className="fw-semibold text-dark">{act.subject}</div>
-                      {act.description && <small className="text-muted d-block">{act.description}</small>}
+                      {act.description && <small className="text-secondary d-block">{act.description}</small>}
                     </td>
                     <td>
                       {act.customerId ? (
-                        <span className="fw-semibold text-primary">{act.customerId.customerName}</span>
+                        <span className="fw-semibold small" style={{ color: '#2563EB' }}>{act.customerId.customerName}</span>
                       ) : act.leadId ? (
-                        <span className="fw-semibold text-info">{act.leadId.leadName}</span>
+                        <span className="fw-semibold small text-dark">{act.leadId.leadName}</span>
                       ) : '—'}
                     </td>
-                    <td><small>{act.assignedTo?.name || 'User'}</small></td>
+                    <td><small className="text-secondary">{act.assignedTo?.name || 'User'}</small></td>
                     <td>
-                      <div>{new Date(act.activityDate).toLocaleDateString()}</div>
+                      <div className="small fw-semibold">{new Date(act.activityDate).toLocaleDateString()}</div>
                       <small className="text-muted">{new Date(act.activityDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
                     </td>
-                    <td><span className="badge bg-success">{act.status}</span></td>
+                    <td><span className="badge-pill badge-success-soft">{act.status}</span></td>
                   </tr>
                 ))
               )}
@@ -190,19 +192,19 @@ const Activities = () => {
         </div>
       </div>
 
-      {/* Log Activity Modal */}
+      {/* Modal */}
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}>
           <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content border-0 shadow">
-              <div className="modal-header bg-light">
-                <h5 className="modal-title fw-bold">Log Sales Activity</h5>
+            <div className="modal-content border-0">
+              <div className="modal-header">
+                <h5 className="modal-title fw-bold" style={{ color: '#0F172A' }}>Log Sales Interaction</h5>
                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
               <form onSubmit={handleFormSubmit}>
                 <div className="modal-body p-4">
                   <div className="mb-3">
-                    <label className="form-label">Activity Type</label>
+                    <label className="form-label">Channel Type</label>
                     <select
                       className="form-select"
                       value={formData.activityType}
@@ -211,23 +213,23 @@ const Activities = () => {
                       <option value="Call">Phone Call</option>
                       <option value="Meeting">Meeting</option>
                       <option value="Email">Email Communication</option>
-                      <option value="Task">Sales Task</option>
+                      <option value="Task">Task Execution</option>
                     </select>
                   </div>
 
                   <div className="mb-3">
                     <label className="form-label">Link To:</label>
-                    <div className="btn-group w-100" role="group">
+                    <div className="btn-group w-100">
                       <button
                         type="button"
-                        className={`btn ${formData.relatedType === 'Customer' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        className={`btn btn-sm ${formData.relatedType === 'Customer' ? 'btn-primary' : 'btn-outline-secondary'}`}
                         onClick={() => setFormData({ ...formData, relatedType: 'Customer' })}
                       >
                         Customer
                       </button>
                       <button
                         type="button"
-                        className={`btn ${formData.relatedType === 'Lead' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        className={`btn btn-sm ${formData.relatedType === 'Lead' ? 'btn-primary' : 'btn-outline-secondary'}`}
                         onClick={() => setFormData({ ...formData, relatedType: 'Lead' })}
                       >
                         Lead
@@ -264,11 +266,11 @@ const Activities = () => {
                   )}
 
                   <div className="mb-3">
-                    <label className="form-label">Subject / Purpose <span className="text-danger">*</span></label>
+                    <label className="form-label">Subject <span className="text-danger">*</span></label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="e.g. Discussed proposal pricing with executive sponsor"
+                      placeholder="e.g. Conducted commercial discussion with VP"
                       required
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
@@ -276,18 +278,18 @@ const Activities = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Detailed Notes / Minutes</label>
+                    <label className="form-label">Discussion Notes</label>
                     <textarea
                       className="form-control"
                       rows="3"
-                      placeholder="Key takeaways and next action items..."
+                      placeholder="Key takeaways..."
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     ></textarea>
                   </div>
                 </div>
-                <div className="modal-footer bg-light">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-outline-secondary" onClick={() => setShowModal(false)}>Cancel</button>
                   <button type="submit" className="btn btn-primary" disabled={saving}>
                     {saving ? 'Saving...' : 'Log Activity'}
                   </button>
