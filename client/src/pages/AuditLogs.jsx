@@ -45,9 +45,9 @@ const AuditLogs = () => {
   };
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-3">
       {/* Header */}
-      <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
         <div>
           <h2 className="crm-page-title">Security & Audit Trail</h2>
           <p className="crm-page-subtitle">Immutable historical ledger tracking authentication events and data mutations.</p>

@@ -41,77 +41,67 @@ const CustomerDetail = () => {
   }
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-3">
       {/* Breadcrumb */}
-      <nav aria-label="breadcrumb" className="mb-3">
-        <ol className="breadcrumb small">
-          <li className="breadcrumb-item"><Link to="/customers" className="text-decoration-none" style={{ color: '#2563EB' }}>Customers</Link></li>
+      <nav aria-label="breadcrumb" className="mb-2">
+        <ol className="breadcrumb small mb-1">
+          <li className="breadcrumb-item"><Link to="/customers" className="text-decoration-none text-primary">Customers</Link></li>
           <li className="breadcrumb-item active fw-semibold" aria-current="page">{customer.customerName}</li>
         </ol>
       </nav>
 
       {/* Header Profile Card */}
-      <div className="crm-card p-4 mb-4">
+      <div className="crm-card p-3 mb-3">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div className="d-flex align-items-center">
-            <div className="kpi-icon-wrap me-3" style={{ width: '56px', height: '56px', fontSize: '1.6rem' }}>
+            <div className="kpi-icon-wrap me-3" style={{ width: '40px', height: '40px', fontSize: '1.15rem' }}>
               <i className="bi bi-building"></i>
             </div>
             <div>
               <div className="d-flex align-items-center gap-2">
-                <h3 className="fw-bold mb-0" style={{ color: '#0F172A' }}>{customer.customerName}</h3>
+                <h2 className="crm-page-title mb-0">{customer.customerName}</h2>
                 <span className="badge-pill badge-secondary-soft font-monospace">{customer.customerCode}</span>
-                <span className={`badge-pill ${customer.status === 'Active' ? 'badge-success-soft' : 'badge-secondary-soft'}`}>
+                <span className={`badge-pill ${customer.status === 'Active' ? 'badge-primary-soft' : 'badge-secondary-soft'}`}>
                   {customer.status}
                 </span>
               </div>
-              <div className="text-secondary small mt-1">
-                <span className="me-3"><i className="bi bi-briefcase me-1"></i>{customer.companyName || 'Individual'}</span>
-                <span className="me-3"><i className="bi bi-envelope me-1"></i>{customer.email}</span>
-                <span className="me-3"><i className="bi bi-telephone me-1"></i>{customer.phone}</span>
-                {customer.city && <span><i className="bi bi-geo-alt me-1"></i>{customer.city}, {customer.state}</span>}
+              <div className="crm-subtext mt-1 d-flex flex-wrap gap-3">
+                <span>{customer.companyName || 'Individual'}</span>
+                <span>{customer.email}</span>
+                <span>{customer.phone}</span>
+                {customer.city && <span>{customer.city}, {customer.state}</span>}
               </div>
             </div>
           </div>
           <div className="text-end">
-            <small className="text-muted d-block fw-semibold" style={{ fontSize: '0.75rem' }}>Assigned Representative:</small>
-            <div className="fw-bold" style={{ color: '#2563EB' }}>{customer.assignedTo?.name || 'Unassigned'}</div>
+            <small className="crm-subtext d-block">Assigned Representative:</small>
+            <div className="fw-bold text-primary" style={{ fontSize: '0.875rem' }}>{customer.assignedTo?.name || 'Unassigned'}</div>
           </div>
         </div>
       </div>
 
-      {/* 360 Tabs */}
-      <div className="crm-card">
-        <div className="border-bottom px-3 pt-2">
-          <ul className="nav nav-tabs border-0">
-            <li className="nav-item">
-              <button
-                className={`nav-link border-0 pb-3 fw-semibold ${activeTab === 'opportunities' ? 'active border-bottom border-primary border-3 text-primary' : 'text-secondary'}`}
-                onClick={() => setActiveTab('opportunities')}
-              >
-                <i className="bi bi-briefcase me-2"></i>Opportunities ({customer.opportunities?.length || 0})
-              </button>
-            </li>
-            <li className="nav-item">
-              <button
-                className={`nav-link border-0 pb-3 fw-semibold ${activeTab === 'followups' ? 'active border-bottom border-primary border-3 text-primary' : 'text-secondary'}`}
-                onClick={() => setActiveTab('followups')}
-              >
-                <i className="bi bi-calendar2-check me-2"></i>Follow-Ups ({customer.followUps?.length || 0})
-              </button>
-            </li>
-            <li className="nav-item">
-              <button
-                className={`nav-link border-0 pb-3 fw-semibold ${activeTab === 'activities' ? 'active border-bottom border-primary border-3 text-primary' : 'text-secondary'}`}
-                onClick={() => setActiveTab('activities')}
-              >
-                <i className="bi bi-clock-history me-2"></i>Activities ({customer.activities?.length || 0})
-              </button>
-            </li>
-          </ul>
+      {/* 360 Tabs - Segmented Style */}
+      <div className="crm-card p-2 mb-3">
+        <div className="crm-segmented-control d-flex flex-nowrap overflow-x-auto w-100">
+          {[
+            { id: 'opportunities', label: `Opportunities (${customer.opportunities?.length || 0})` },
+            { id: 'followups', label: `Follow-Ups (${customer.followUps?.length || 0})` },
+            { id: 'activities', label: `Activities (${customer.activities?.length || 0})` }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              type="button"
+              className={`crm-segment-btn flex-shrink-0 ${activeTab === tab.id ? 'active-primary' : ''}`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
+      </div>
 
-        <div className="p-4">
+      <div className="crm-card p-3">
+        <div>
           {activeTab === 'opportunities' && (
             <div>
               {customer.opportunities?.length === 0 ? (

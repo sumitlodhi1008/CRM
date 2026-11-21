@@ -104,9 +104,9 @@ const Reports = () => {
   };
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-3">
       {/* Header */}
-      <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
         <div>
           <h2 className="crm-page-title">Reports & Analytics</h2>
           <p className="crm-page-subtitle">Cross-cutting revenue pipeline, conversion analytics, and historical audits.</p>
@@ -118,7 +118,7 @@ const Reports = () => {
       </div>
 
       {/* Tabs - Clean Text-Only Segmented Control */}
-      <div className="crm-card p-2 mb-4">
+      <div className="crm-card p-2 mb-3">
         <div className="crm-segmented-control d-flex flex-nowrap overflow-x-auto w-100">
           {[
             { id: 'pipeline', label: 'Pipeline Forecast' },

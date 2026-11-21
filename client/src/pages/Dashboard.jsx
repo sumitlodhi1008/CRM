@@ -75,12 +75,11 @@ const Dashboard = () => {
           charts?.leadStatus?.Lost || 0
         ],
         backgroundColor: [
-          '#2563EB', // Primary Cobalt Blue
-          '#60A5FA', // Light Cobalt
-          '#10B981', // Functional Emerald
-          '#94A3B8', // Neutral Slate
+          '#4F46E5', // Primary Indigo
+          '#6366F1', // Light Indigo
+          '#818CF8', // Soft Indigo
           '#0F172A', // Secondary Deep Slate
-          '#EF4444'  // Functional Danger
+          '#475569'  // Slate Muted
         ],
         borderWidth: 2,
         borderColor: '#FFFFFF'
@@ -101,7 +100,7 @@ const Dashboard = () => {
           charts?.opportunityPipeline?.Won?.amount || 0,
           charts?.opportunityPipeline?.Lost?.amount || 0
         ],
-        backgroundColor: '#2563EB',
+        backgroundColor: '#4F46E5',
         borderRadius: 6
       }
     ]
@@ -114,11 +113,11 @@ const Dashboard = () => {
       {
         label: 'Closed Revenue ($)',
         data: charts?.monthlySales?.map(m => m.totalSales) || [],
-        borderColor: '#2563EB',
-        backgroundColor: 'rgba(37, 99, 235, 0.08)',
+        borderColor: '#4F46E5',
+        backgroundColor: 'rgba(79, 70, 229, 0.08)',
         fill: true,
         tension: 0.35,
-        pointBackgroundColor: '#2563EB',
+        pointBackgroundColor: '#4F46E5',
         pointRadius: 4
       }
     ]
@@ -139,9 +138,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-3">
       {/* Top Header & Range Switcher */}
-      <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
         <div>
           <h2 className="crm-page-title">Executive Sales Overview</h2>
           <p className="crm-page-subtitle">Real-time performance indicators and revenue pipeline metrics.</p>
@@ -166,8 +165,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 8 Metric KPI Cards */}
-      <div className="row g-3 mb-4">
+      {/* 8 Metric KPI Cards - Unified Color Consistency */}
+      <div className="row g-2 mb-3">
         {/* Total Customers */}
         <div className="col-12 col-sm-6 col-xl-3">
           <div className="kpi-card">
@@ -190,7 +189,7 @@ const Dashboard = () => {
               <div className="kpi-value">{kpis?.totalLeads ?? 0}</div>
               <small className="badge-pill badge-secondary-soft mt-1">Acquired Prospects</small>
             </div>
-            <div className="kpi-icon-wrap" style={{ backgroundColor: '#F1F5F9', color: '#0F172A' }}>
+            <div className="kpi-icon-wrap">
               <i className="bi bi-funnel"></i>
             </div>
           </div>
@@ -202,9 +201,9 @@ const Dashboard = () => {
             <div>
               <div className="kpi-title">Active Funnel Leads</div>
               <div className="kpi-value">{kpis?.openLeads ?? 0}</div>
-              <small className="badge-pill badge-warning-soft mt-1">In Progress</small>
+              <small className="badge-pill badge-primary-soft mt-1">In Progress</small>
             </div>
-            <div className="kpi-icon-wrap" style={{ backgroundColor: '#FFFBEB', color: '#D97706' }}>
+            <div className="kpi-icon-wrap">
               <i className="bi bi-hourglass-split"></i>
             </div>
           </div>
@@ -230,9 +229,9 @@ const Dashboard = () => {
             <div>
               <div className="kpi-title">Closed Deals (Won)</div>
               <div className="kpi-value">{kpis?.wonOpportunities ?? 0}</div>
-              <small className="badge-pill badge-success-soft mt-1">Revenue Realized</small>
+              <small className="badge-pill badge-primary-soft mt-1">Revenue Realized</small>
             </div>
-            <div className="kpi-icon-wrap" style={{ backgroundColor: '#ECFDF5', color: '#10B981' }}>
+            <div className="kpi-icon-wrap">
               <i className="bi bi-trophy"></i>
             </div>
           </div>
@@ -244,9 +243,9 @@ const Dashboard = () => {
             <div>
               <div className="kpi-title">Closed Lost</div>
               <div className="kpi-value">{kpis?.lostOpportunities ?? 0}</div>
-              <small className="badge-pill badge-danger-soft mt-1">Opportunities Lost</small>
+              <small className="badge-pill badge-secondary-soft mt-1">Opportunities Lost</small>
             </div>
-            <div className="kpi-icon-wrap" style={{ backgroundColor: '#FEF2F2', color: '#EF4444' }}>
+            <div className="kpi-icon-wrap">
               <i className="bi bi-x-circle"></i>
             </div>
           </div>
@@ -257,7 +256,7 @@ const Dashboard = () => {
           <div className="kpi-card">
             <div>
               <div className="kpi-title">Unweighted Pipeline</div>
-              <div className="kpi-value" style={{ color: '#2563EB' }}>
+              <div className="kpi-value">
                 ${(kpis?.totalPipelineValue || 0).toLocaleString()}
               </div>
               <small className="badge-pill badge-primary-soft mt-1">Gross Deal Potential</small>
@@ -273,12 +272,12 @@ const Dashboard = () => {
           <div className="kpi-card">
             <div>
               <div className="kpi-title">Weighted Forecast</div>
-              <div className="kpi-value" style={{ color: '#0F172A' }}>
+              <div className="kpi-value">
                 ${(kpis?.totalWeightedPipeline || 0).toLocaleString()}
               </div>
               <small className="badge-pill badge-secondary-soft mt-1">Probability Derived</small>
             </div>
-            <div className="kpi-icon-wrap" style={{ backgroundColor: '#F1F5F9', color: '#0F172A' }}>
+            <div className="kpi-icon-wrap">
               <i className="bi bi-calculator"></i>
             </div>
           </div>

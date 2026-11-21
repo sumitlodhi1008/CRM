@@ -1,0 +1,16 @@
+{
+  "name": "acxiom-crm",
+  "version": "1.0.0",
+  "description": "AcxiomCRM Enterprise Fullstack MERN CRM Solution",
+  "scripts": {
+    "dev": "concurrently -k -p \"[{name}]\" -n \"SERVER,CLIENT\" -c \"blue.bold,green.bold\" \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "start": "node server/src/server.js",
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "seed": "npm run seed --prefix server",
+    "build": "npm run build --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
