@@ -7,7 +7,6 @@ const Sidebar = () => {
 
   return (
     <div className="crm-sidebar d-none d-md-block">
-      <div className="crm-sidebar-header">Core Operations</div>
       <nav className="nav flex-column mb-3">
         <NavLink to="/dashboard" className={({ isActive }) => `crm-nav-link ${isActive ? 'active' : ''}`}>
           <i className="bi bi-grid-1x2-fill"></i>
