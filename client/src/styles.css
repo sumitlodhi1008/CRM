@@ -1,0 +1,129 @@
+:root {
+  --primary-navy: #1E3A8A;
+  --secondary-teal: #0D9488;
+  --bg-slate: #F8FAFC;
+  --border-slate: #E2E8F0;
+  --text-dark: #0F172A;
+  --text-muted: #64748B;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-slate);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+}
+
+/* Sidebar styling */
+.crm-sidebar {
+  width: 250px;
+  min-height: calc(100vh - 56px);
+  background-color: #ffffff;
+  border-right: 1px solid var(--border-slate);
+}
+
+.crm-sidebar .nav-link {
+  color: var(--text-dark);
+  padding: 10px 18px;
+  font-weight: 500;
+  border-radius: 6px;
+  margin: 2px 10px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.crm-sidebar .nav-link i {
+  font-size: 1.15rem;
+  margin-right: 12px;
+  color: var(--text-muted);
+}
+
+.crm-sidebar .nav-link:hover {
+  background-color: #F1F5F9;
+  color: var(--primary-navy);
+}
+
+.crm-sidebar .nav-link.active {
+  background-color: #EEF2FF;
+  color: var(--primary-navy);
+  font-weight: 600;
+}
+
+.crm-sidebar .nav-link.active i {
+  color: var(--primary-navy);
+}
+
+/* Metric Cards */
+.kpi-card {
+  border: 1px solid var(--border-slate);
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.kpi-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* Tables */
+.crm-table-card {
+  background: #ffffff;
+  border: 1px solid var(--border-slate);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.crm-table th {
+  background-color: #F8FAFC;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-slate);
+  padding: 12px 16px;
+}
+
+.crm-table td {
+  padding: 14px 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-slate);
+  font-size: 0.92rem;
+}
+
+/* Modal and Forms */
+.form-label {
+  font-weight: 500;
+  font-size: 0.88rem;
+  margin-bottom: 5px;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-navy);
+  box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.15);
+}
+
+/* Overdue Badge Pulse */
+.badge-pulse {
+  animation: pulse-danger 2s infinite;
+}
+
+@keyframes pulse-danger {
+  0% { transform: scale(0.98); opacity: 0.85; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.98); opacity: 0.85; }
+}
