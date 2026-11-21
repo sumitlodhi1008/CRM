@@ -74,14 +74,24 @@ body {
 }
 
 /* ==========================================================================
-   SIDEBAR NAVIGATION
+   SIDEBAR NAVIGATION (Strictly Fixed Width — Zero Wobble)
    ========================================================================== */
 .crm-sidebar {
-  width: 255px;
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  flex: 0 0 260px !important;
   min-height: calc(100vh - 58px);
   background: var(--crm-surface);
   border-right: 1px solid var(--crm-border);
   padding: 1.25rem 0.75rem;
+}
+
+.crm-main-content {
+  flex: 1 1 0%;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .crm-sidebar-header {

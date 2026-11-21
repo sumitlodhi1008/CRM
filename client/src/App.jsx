@@ -24,9 +24,9 @@ const AppLayout = ({ children }) => {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
-      <div className="d-flex flex-grow-1">
+      <div className="d-flex flex-grow-1" style={{ minWidth: 0 }}>
         <Sidebar />
-        <main className="flex-grow-1 bg-light overflow-auto" style={{ maxHeight: 'calc(100vh - 56px)' }}>
+        <main className="crm-main-content bg-light" style={{ maxHeight: 'calc(100vh - 56px)' }}>
           {children}
         </main>
       </div>
