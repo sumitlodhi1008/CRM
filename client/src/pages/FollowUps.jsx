@@ -159,32 +159,32 @@ const FollowUps = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="crm-card p-3 mb-4">
-        <div className="d-flex flex-wrap gap-2">
+      <div className="crm-card p-2 mb-4">
+        <div className="crm-segmented-control d-flex flex-nowrap overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <button
             type="button"
-            className={`btn btn-sm ${status === '' && !isOverdue ? 'btn-primary' : 'btn-outline-secondary'}`}
+            className={`crm-segment-btn flex-shrink-0 ${status === '' && !isOverdue ? 'active-primary' : ''}`}
             onClick={() => { setStatus(''); setIsOverdue(false); }}
           >
             All Follow-Ups
           </button>
           <button
             type="button"
-            className={`btn btn-sm ${status === 'Planned' && !isOverdue ? 'btn-primary' : 'btn-outline-secondary'}`}
+            className={`crm-segment-btn flex-shrink-0 ${status === 'Planned' && !isOverdue ? 'active-primary' : ''}`}
             onClick={() => { setStatus('Planned'); setIsOverdue(false); }}
           >
             Planned / Upcoming
           </button>
           <button
             type="button"
-            className={`btn btn-sm ${isOverdue ? 'btn-danger' : 'btn-outline-danger'}`}
+            className={`crm-segment-btn flex-shrink-0 ${isOverdue ? 'active-danger' : ''}`}
             onClick={() => { setStatus(''); setIsOverdue(true); }}
           >
             <i className="bi bi-exclamation-circle-fill me-1"></i> Overdue Tasks
           </button>
           <button
             type="button"
-            className={`btn btn-sm ${status === 'Completed' ? 'btn-primary' : 'btn-outline-secondary'}`}
+            className={`crm-segment-btn flex-shrink-0 ${status === 'Completed' ? 'active-primary' : ''}`}
             onClick={() => { setStatus('Completed'); setIsOverdue(false); }}
           >
             Completed

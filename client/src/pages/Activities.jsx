@@ -118,13 +118,13 @@ const Activities = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="crm-card p-3 mb-4">
-        <div className="d-flex flex-wrap gap-2">
+      <div className="crm-card p-2 mb-4">
+        <div className="crm-segmented-control d-flex flex-nowrap overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {['', 'Call', 'Meeting', 'Email', 'Task'].map((type) => (
             <button
               key={type}
               type="button"
-              className={`btn btn-sm ${activityType === type ? 'btn-primary' : 'btn-outline-secondary'}`}
+              className={`crm-segment-btn flex-shrink-0 ${activityType === type ? 'active-primary' : ''}`}
               onClick={() => setActivityType(type)}
             >
               {type === '' ? 'All Channels' : type}

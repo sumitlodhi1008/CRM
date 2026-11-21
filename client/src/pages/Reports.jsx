@@ -117,25 +117,27 @@ const Reports = () => {
         </button>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs - Guaranteed Single Line Segmented Control */}
       <div className="crm-card p-2 mb-4">
-        <div className="d-flex flex-wrap gap-1">
+        <div className="crm-segmented-control d-flex flex-nowrap overflow-x-auto w-100" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {[
-            { id: 'pipeline', label: 'Pipeline Forecast' },
-            { id: 'customers', label: 'Customer Directory' },
-            { id: 'leads', label: 'Lead Funnel' },
-            { id: 'opportunities', label: 'Opportunities' },
-            { id: 'followups', label: 'Touchpoint Schedule' },
-            { id: 'conversion', label: 'Conversion & Win/Loss' },
-            { id: 'activities', label: 'Activity Feed' }
+            { id: 'pipeline', label: 'Pipeline Forecast', icon: 'bi-funnel-fill' },
+            { id: 'customers', label: 'Customers', icon: 'bi-building' },
+            { id: 'leads', label: 'Leads', icon: 'bi-person-badge' },
+            { id: 'opportunities', label: 'Opportunities', icon: 'bi-briefcase' },
+            { id: 'followups', label: 'Follow-Ups', icon: 'bi-calendar-check' },
+            { id: 'conversion', label: 'Win / Loss', icon: 'bi-graph-up-arrow' },
+            { id: 'activities', label: 'Activity Feed', icon: 'bi-clock-history' }
           ].map(r => (
             <button
               key={r.id}
-              className={`btn btn-sm ${activeReport === r.id ? 'btn-primary' : 'btn-light bg-transparent text-secondary border-0'}`}
-              style={{ fontWeight: 600, borderRadius: '6px' }}
+              type="button"
+              className={`crm-segment-btn flex-shrink-0 ${activeReport === r.id ? 'active-primary' : ''}`}
+              style={{ whiteSpace: 'nowrap' }}
               onClick={() => setActiveReport(r.id)}
             >
-              {r.label}
+              <i className={`bi ${r.icon} me-1`}></i>
+              <span>{r.label}</span>
             </button>
           ))}
         </div>

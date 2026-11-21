@@ -147,16 +147,20 @@ const Dashboard = () => {
           <p className="text-secondary small mb-0">Real-time performance indicators and revenue pipeline metrics.</p>
         </div>
 
-        <div className="d-flex align-items-center bg-white p-1 rounded-3 border">
-          {['Today', 'ThisWeek', 'ThisMonth'].map((range) => (
+        {/* Segmented Time Range Switcher */}
+        <div className="crm-segmented-control">
+          {[
+            { id: 'Today', label: 'Today' },
+            { id: 'ThisWeek', label: 'This Week' },
+            { id: 'ThisMonth', label: 'This Month' }
+          ].map((item) => (
             <button
-              key={range}
+              key={item.id}
               type="button"
-              className={`btn btn-sm ${timeRange === range ? 'btn-primary' : 'btn-light bg-transparent text-secondary border-0'}`}
-              onClick={() => setTimeRange(range)}
-              style={{ fontWeight: 600, fontSize: '0.8rem' }}
+              className={`crm-segment-btn ${timeRange === item.id ? 'active-primary' : ''}`}
+              onClick={() => setTimeRange(item.id)}
             >
-              {range === 'Today' ? 'Today' : range === 'ThisWeek' ? 'This Week' : 'This Month'}
+              {item.label}
             </button>
           ))}
         </div>
