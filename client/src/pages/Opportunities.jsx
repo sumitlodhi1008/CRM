@@ -182,11 +182,11 @@ const Opportunities = () => {
       {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Opportunity Pipeline</h2>
-          <p className="text-secondary small mb-0">Track commercial deals, stage progressions, and probability-weighted revenues.</p>
+          <h2 className="crm-page-title">Opportunity Pipeline</h2>
+          <p className="crm-page-subtitle">Track commercial deals, stage progressions, and probability-weighted revenues.</p>
         </div>
         <button className="btn btn-primary d-flex align-items-center gap-2" onClick={() => handleOpenModal()}>
-          <i className="bi bi-briefcase-fill"></i>
+          <i className="bi bi-plus-lg"></i>
           <span>New Opportunity</span>
         </button>
       </div>

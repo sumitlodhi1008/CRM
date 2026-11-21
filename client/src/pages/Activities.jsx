@@ -108,8 +108,8 @@ const Activities = () => {
       {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Activity Log</h2>
-          <p className="text-secondary small mb-0">Omnichannel history of customer conversations, meetings, and sales tasks.</p>
+          <h2 className="crm-page-title">Activity Log</h2>
+          <p className="crm-page-subtitle">Omnichannel history of customer conversations, meetings, and sales tasks.</p>
         </div>
         <button className="btn btn-primary d-flex align-items-center gap-2" onClick={handleOpenModal}>
           <i className="bi bi-plus-lg"></i>

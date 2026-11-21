@@ -108,8 +108,8 @@ const Reports = () => {
       {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Reports & Analytics</h2>
-          <p className="text-secondary small mb-0">Cross-cutting revenue pipeline, conversion analytics, and historical audits.</p>
+          <h2 className="crm-page-title">Reports & Analytics</h2>
+          <p className="crm-page-subtitle">Cross-cutting revenue pipeline, conversion analytics, and historical audits.</p>
         </div>
         <button className="btn btn-outline-primary d-flex align-items-center gap-2" onClick={exportToCSV}>
           <i className="bi bi-download"></i>
@@ -117,17 +117,17 @@ const Reports = () => {
         </button>
       </div>
 
-      {/* Tabs - Guaranteed Single Line Segmented Control */}
+      {/* Tabs - Clean Text-Only Segmented Control */}
       <div className="crm-card p-2 mb-4">
-        <div className="crm-segmented-control d-flex flex-nowrap overflow-x-auto w-100" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="crm-segmented-control d-flex flex-nowrap overflow-x-auto w-100">
           {[
-            { id: 'pipeline', label: 'Pipeline Forecast', icon: 'bi-funnel-fill' },
-            { id: 'customers', label: 'Customers', icon: 'bi-building' },
-            { id: 'leads', label: 'Leads', icon: 'bi-person-badge' },
-            { id: 'opportunities', label: 'Opportunities', icon: 'bi-briefcase' },
-            { id: 'followups', label: 'Follow-Ups', icon: 'bi-calendar-check' },
-            { id: 'conversion', label: 'Win / Loss', icon: 'bi-graph-up-arrow' },
-            { id: 'activities', label: 'Activity Feed', icon: 'bi-clock-history' }
+            { id: 'pipeline', label: 'Pipeline Forecast' },
+            { id: 'customers', label: 'Customers' },
+            { id: 'leads', label: 'Leads' },
+            { id: 'opportunities', label: 'Opportunities' },
+            { id: 'followups', label: 'Follow-Ups' },
+            { id: 'conversion', label: 'Win / Loss' },
+            { id: 'activities', label: 'Activity Feed' }
           ].map(r => (
             <button
               key={r.id}
@@ -136,8 +136,7 @@ const Reports = () => {
               style={{ whiteSpace: 'nowrap' }}
               onClick={() => setActiveReport(r.id)}
             >
-              <i className={`bi ${r.icon} me-1`}></i>
-              <span>{r.label}</span>
+              {r.label}
             </button>
           ))}
         </div>
@@ -337,23 +336,23 @@ const Reports = () => {
 
             {/* 6. CONVERSION REPORT */}
             {activeReport === 'conversion' && reportData && (
-              <div className="row g-4">
+              <div className="row g-3">
                 <div className="col-12 col-md-6">
-                  <div className="crm-card p-4">
-                    <h5 className="fw-bold mb-3" style={{ color: '#0F172A' }}>Lead Conversion Ratio</h5>
-                    <div className="display-4 fw-bold text-primary mb-2">{reportData.convRate}%</div>
-                    <p className="text-secondary small">
-                      <strong>{reportData.convertedCount}</strong> leads successfully converted out of <strong>{reportData.totalLeads}</strong> total prospects captured.
-                    </p>
+                  <div className="crm-card p-3">
+                    <div className="crm-section-title mb-2">Lead Conversion Ratio</div>
+                    <div className="crm-metric-display text-primary mb-2">{reportData.convRate}%</div>
+                    <div className="crm-subtext">
+                      <strong>{reportData.convertedCount}</strong> leads converted out of <strong>{reportData.totalLeads}</strong> prospects captured.
+                    </div>
                   </div>
                 </div>
                 <div className="col-12 col-md-6">
-                  <div className="crm-card p-4">
-                    <h5 className="fw-bold mb-3" style={{ color: '#0F172A' }}>Opportunity Win Ratio</h5>
-                    <div className="display-4 fw-bold text-success mb-2">{reportData.winRate}%</div>
-                    <p className="text-secondary small">
+                  <div className="crm-card p-3">
+                    <div className="crm-section-title mb-2">Opportunity Win Ratio</div>
+                    <div className="crm-metric-display text-success mb-2">{reportData.winRate}%</div>
+                    <div className="crm-subtext">
                       <strong>{reportData.wonCount}</strong> deals Closed-Won vs. <strong>{reportData.lostCount}</strong> deals Closed-Lost.
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>

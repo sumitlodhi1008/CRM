@@ -143,8 +143,8 @@ const Dashboard = () => {
       {/* Top Header & Range Switcher */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Executive Sales Overview</h2>
-          <p className="text-secondary small mb-0">Real-time performance indicators and revenue pipeline metrics.</p>
+          <h2 className="crm-page-title">Executive Sales Overview</h2>
+          <p className="crm-page-subtitle">Real-time performance indicators and revenue pipeline metrics.</p>
         </div>
 
         {/* Segmented Time Range Switcher */}

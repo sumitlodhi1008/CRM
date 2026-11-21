@@ -149,18 +149,18 @@ const FollowUps = () => {
       {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Follow-Up & Touchpoints</h2>
-          <p className="text-secondary small mb-0">Scheduled client communications, overdue alerts, and task tracking.</p>
+          <h2 className="crm-page-title">Follow-Up & Touchpoints</h2>
+          <p className="crm-page-subtitle">Scheduled client communications, overdue alerts, and task tracking.</p>
         </div>
         <button className="btn btn-primary d-flex align-items-center gap-2" onClick={handleOpenModal}>
-          <i className="bi bi-calendar-plus"></i>
+          <i className="bi bi-plus-lg"></i>
           <span>Schedule Follow-Up</span>
         </button>
       </div>
 
       {/* Filter Tabs */}
       <div className="crm-card p-2 mb-4">
-        <div className="crm-segmented-control d-flex flex-nowrap overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="crm-segmented-control d-flex flex-nowrap overflow-x-auto">
           <button
             type="button"
             className={`crm-segment-btn flex-shrink-0 ${status === '' && !isOverdue ? 'active-primary' : ''}`}
@@ -180,7 +180,7 @@ const FollowUps = () => {
             className={`crm-segment-btn flex-shrink-0 ${isOverdue ? 'active-danger' : ''}`}
             onClick={() => { setStatus(''); setIsOverdue(true); }}
           >
-            <i className="bi bi-exclamation-circle-fill me-1"></i> Overdue Tasks
+            Overdue Tasks
           </button>
           <button
             type="button"

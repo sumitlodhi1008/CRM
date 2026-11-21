@@ -49,8 +49,8 @@ const AuditLogs = () => {
       {/* Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Security & Audit Trail</h2>
-          <p className="text-secondary small mb-0">Immutable historical ledger tracking authentication events and data mutations.</p>
+          <h2 className="crm-page-title">Security & Audit Trail</h2>
+          <p className="crm-page-subtitle">Immutable historical ledger tracking authentication events and data mutations.</p>
         </div>
       </div>
 

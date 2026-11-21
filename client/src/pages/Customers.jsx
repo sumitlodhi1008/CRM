@@ -170,8 +170,8 @@ const Customers = () => {
       {/* Page Header */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: '#0F172A' }}>Customer Directory</h2>
-          <p className="text-secondary small mb-0">Authorized customer accounts and relational interaction logs.</p>
+          <h2 className="crm-page-title">Customer Directory</h2>
+          <p className="crm-page-subtitle">Authorized customer accounts and relational interaction logs.</p>
         </div>
         <button className="btn btn-primary d-flex align-items-center gap-2" onClick={() => handleOpenModal()}>
           <i className="bi bi-plus-lg"></i>
